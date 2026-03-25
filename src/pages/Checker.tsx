@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { checkerItems, type CheckerItem, type AudienceType } from '../data/violations'
 import {
   CheckmarkIcon,
@@ -30,13 +30,42 @@ import {
   StarIcon,
 } from '../components/Icons'
 
+const HOURLY_RATE_STORAGE_KEY = 'checker-hourly-rate'
+
 export default function Checker() {
   const [audience, setAudience] = useState<AudienceType>('cyclist')
   const [selected, setSelected] = useState<CheckerItem | null>(null)
+  const [hourlyRate, setHourlyRate] = useState<string>(() => {
+    try {
+      return localStorage.getItem(HOURLY_RATE_STORAGE_KEY) ?? ''
+    } catch {
+      return ''
+    }
+  })
+
+  useEffect(() => {
+    try {
+      if (hourlyRate.trim()) {
+        localStorage.setItem(HOURLY_RATE_STORAGE_KEY, hourlyRate.trim())
+      } else {
+        localStorage.removeItem(HOURLY_RATE_STORAGE_KEY)
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [hourlyRate])
 
   const items = checkerItems.filter(i => i.audience === audience || i.audience === 'both')
 
-  if (selected) return <ResultView item={selected} onBack={() => setSelected(null)} />
+  if (selected) {
+    return (
+      <ResultView
+        item={selected}
+        hourlyRate={hourlyRate}
+        onBack={() => setSelected(null)}
+      />
+    )
+  }
 
   return (
     <div className="min-h-screen pb-24" style={{ background: 'var(--bg-grouped)' }}>
@@ -87,8 +116,46 @@ export default function Checker() {
         </div>
       </div>
 
-      {/* リスト */}
+      {/* 想定時給（結果画面の労働コスト換算に使用） */}
       <div className="px-4 mt-4 max-w-md mx-auto">
+        <div
+          className="rounded-2xl p-4 mb-4"
+          style={{ background: 'var(--bg-primary)', border: '1px solid var(--separator)' }}
+        >
+          <p
+            className="flex items-center gap-1.5 text-[11px] font-semibold mb-2"
+            style={{ color: 'var(--label-secondary)' }}
+          >
+            <ClockIcon size={14} color="var(--pink-primary)" />
+            想定時給（労働コスト換算用）
+          </p>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              inputMode="numeric"
+              min={0}
+              value={hourlyRate}
+              onChange={(e) => setHourlyRate(e.target.value)}
+              placeholder="例: 1200"
+              className="flex-1 px-3 py-2.5 rounded-xl text-[15px] font-medium"
+              style={{
+                border: '1.5px solid var(--separator)',
+                background: 'var(--fill-pink)',
+                color: 'var(--label-primary)',
+              }}
+            />
+            <span className="text-sm font-medium shrink-0" style={{ color: 'var(--label-secondary)' }}>
+              円／時間
+            </span>
+          </div>
+          <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--label-tertiary)' }}>
+            違反と反則金が出たとき、この時給で「何時間分の労働に相当するか」を結果画面に表示します。
+          </p>
+        </div>
+      </div>
+
+      {/* リスト */}
+      <div className="px-4 mt-0 max-w-md mx-auto">
         <p
           className="text-[11px] font-semibold uppercase tracking-widest mb-2 px-1"
           style={{ color: 'var(--label-secondary)' }}
@@ -151,12 +218,17 @@ function ResultDot({ result }: { result: CheckerItem['result'] }) {
 }
 
 /* ── 判定結果 ── */
-function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void }) {
-  const [hourlyRate, setHourlyRate] = useState<string>('')
-  const [showCostBreakdown, setShowCostBreakdown] = useState(false)
-
-  const isViolation   = item.result === 'violation'
-  const isSafe        = item.result === 'safe'
+function ResultView({
+  item,
+  hourlyRate,
+  onBack,
+}: {
+  item: CheckerItem
+  hourlyRate: string
+  onBack: () => void
+}) {
+  const isViolation = item.result === 'violation'
+  const isSafe = item.result === 'safe'
 
   const extractAmount = (fineText: string): number | null => {
     const match = fineText.match(/(\d+,?\d*)/)
@@ -164,13 +236,14 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
     return parseInt(match[1].replace(/,/g, ''), 10)
   }
 
+  const rateNum = parseInt(hourlyRate.trim(), 10)
+  const hasValidRate = !Number.isNaN(rateNum) && rateNum > 0
+
   const calculateLaborHours = (): number | null => {
-    if (!hourlyRate || !item.fineText) return null
-    const rate = parseInt(hourlyRate, 10)
-    if (isNaN(rate) || rate <= 0) return null
+    if (!hasValidRate || !item.fineText) return null
     const amount = extractAmount(item.fineText)
     if (!amount) return null
-    return Math.ceil(amount / rate)
+    return Math.ceil(amount / rateNum)
   }
 
   const opportunities = [
@@ -183,14 +256,17 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
   const calculateCostBreakdown = () => {
     const hours = calculateLaborHours()
     if (!hours) return null
-    const hourlyRateNum = parseInt(hourlyRate, 10)
-    const totalCost = hours * hourlyRateNum
+    const totalCost = hours * rateNum
 
     return opportunities.map(opp => ({
       ...opp,
       count: (totalCost / opp.price).toFixed(1),
     }))
   }
+
+  const laborHours = calculateLaborHours()
+  const costRows = calculateCostBreakdown()
+  const showLaborCost = isViolation && item.fineText && hasValidRate && laborHours != null && costRows
 
   const gradients = {
     violation:   'linear-gradient(160deg,#FF6B6B,#FF3B30)',
@@ -280,7 +356,7 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
           </div>
         )}
 
-        {/* 時間コスト計算 */}
+        {/* 時間コスト（一覧で入力した想定時給で表示） */}
         {isViolation && item.fineText && (
           <div
             className="rounded-2xl p-4 mb-3 animate-slide-up"
@@ -294,36 +370,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
               あなたの労働時間コスト
             </p>
 
-            {!showCostBreakdown ? (
+            {showLaborCost ? (
               <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <input
-                    type="number"
-                    value={hourlyRate}
-                    onChange={(e) => setHourlyRate(e.target.value)}
-                    placeholder="1200"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                    style={{ borderColor: '#FECDD3' }}
-                  />
-                  <span style={{ color: 'var(--label-secondary)', fontSize: '14px' }}>円/時間</span>
-                </div>
-                <p style={{ color: 'var(--label-secondary)', fontSize: '12px', marginBottom: '10px' }}>
-                  あなたの想定時給を入力してください
+                <p className="text-xs mb-2" style={{ color: 'var(--label-secondary)' }}>
+                  想定時給 {rateNum.toLocaleString()}円／時間（一覧画面で変更できます）
                 </p>
-                <button
-                  onClick={() => {
-                    if (hourlyRate && parseInt(hourlyRate, 10) > 0) {
-                      setShowCostBreakdown(true)
-                    }
-                  }}
-                  className="ios-press w-full py-2 rounded-lg font-semibold text-white text-sm"
-                  style={{ background: 'var(--ios-red)' }}
-                >
-                  計算する
-                </button>
-              </div>
-            ) : (
-              <div>
                 <div className="mb-4 p-3 rounded-lg" style={{ background: 'rgba(255,59,48,.05)' }}>
                   <p style={{ color: 'var(--label-secondary)', fontSize: '12px', marginBottom: '8px' }}>
                     → 結果：
@@ -332,15 +383,15 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
                     className="text-4xl font-black leading-tight"
                     style={{ color: 'var(--ios-red)' }}
                   >
-                    あなたがこの違反で<br />失うのは『{calculateLaborHours()}時間分』<br />の労働です。
+                    あなたがこの違反で<br />失うのは『{laborHours}時間分』<br />の労働です。
                   </p>
                 </div>
 
                 <p style={{ color: 'var(--label-secondary)', fontSize: '12px', marginBottom: '10px' }}>
                   あなたの機会損失：
                 </p>
-                <div style={{ marginBottom: '15px' }}>
-                  {calculateCostBreakdown()?.map((opp, idx) => (
+                <div style={{ marginBottom: '4px' }}>
+                  {costRows!.map((opp, idx) => (
                     <div
                       key={idx}
                       style={{
@@ -358,18 +409,12 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
                     </div>
                   ))}
                 </div>
-
-                <button
-                  onClick={() => {
-                    setShowCostBreakdown(false)
-                    setHourlyRate('')
-                  }}
-                  className="ios-press w-full py-2 rounded-lg font-semibold text-sm"
-                  style={{ background: 'rgba(232,132,154,.1)', color: 'var(--pink-primary)' }}
-                >
-                  別の時給で計算
-                </button>
               </div>
+            ) : (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--label-secondary)' }}>
+                換算するには、<strong style={{ color: 'var(--label-primary)' }}>一覧の上にある「想定時給」</strong>
+                に半角数字を入力してから、もう一度この行為を開いてください。
+              </p>
             )}
           </div>
         )}
@@ -459,11 +504,7 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
         </div>
 
         <button
-          onClick={() => {
-            setHourlyRate('')
-            setShowCostBreakdown(false)
-            onBack()
-          }}
+          onClick={onBack}
           className="ios-press w-full py-4 rounded-2xl font-black text-white text-[15px]"
           style={{
             background: 'linear-gradient(135deg,var(--pink-primary),var(--pink-deep))',
