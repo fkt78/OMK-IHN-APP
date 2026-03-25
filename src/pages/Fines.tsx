@@ -87,7 +87,7 @@ export default function Fines() {
             className="ios-press shrink-0 rounded-lg px-1 py-0.5 text-sm font-semibold text-white z-10"
             style={{ marginTop: 2 }}
           >
-            ‹ ホーム
+            ‹ 戻る
           </button>
           <div className="min-w-0 flex-1 pt-0.5">
             <div className="flex items-center gap-2 mb-0.5">

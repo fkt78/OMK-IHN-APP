@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { checkerItems, type CheckerItem, type AudienceType } from '../data/violations'
 import {
   CheckmarkIcon,
@@ -35,6 +36,7 @@ const PINK_HEADER_GRADIENT =
   'linear-gradient(160deg,#F9C8D5 0%,#F4A0B5 45%,#E8849A 100%)'
 
 export default function Checker() {
+  const navigate = useNavigate()
   const [audience, setAudience] = useState<AudienceType>('cyclist')
   const [selected, setSelected] = useState<CheckerItem | null>(null)
   const [hourlyRate, setHourlyRate] = useState<string>(() => {
@@ -79,17 +81,29 @@ export default function Checker() {
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
-        <div className="flex items-center gap-2 mb-0.5">
-          <LightningIcon size={28} color="#fff" />
-          <h1 className="font-black text-[28px] text-white">即時チェック</h1>
+        <div className="relative flex items-start gap-2">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="ios-press shrink-0 rounded-lg px-1 py-0.5 text-sm font-semibold text-white z-10"
+            style={{ marginTop: 2 }}
+          >
+            ‹ 戻る
+          </button>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <div className="flex items-center gap-2 mb-0.5">
+              <LightningIcon size={26} color="#fff" />
+              <h1 className="font-black text-[24px] leading-tight text-white">即時チェック</h1>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,.85)', fontSize: 13 }}>
+              この行為、アウト？セーフ？一発判定！
+            </p>
+          </div>
         </div>
-        <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
-          この行為、アウト？セーフ？一発判定！
-        </p>
 
         {/* セグメントコントロール */}
         <div
-          className="flex gap-1 mt-4 rounded-xl p-1"
+          className="flex gap-1 mt-3 rounded-xl p-1"
           style={{ background: 'rgba(255,255,255,.2)' }}
         >
           {[
