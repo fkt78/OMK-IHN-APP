@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="pwaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F9C8D5"/>
+      <stop offset="45%" stop-color="#F4A0B5"/>
+      <stop offset="100%" stop-color="#E8849A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="114" fill="url(#pwaBg)"/>
+  <g stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="168" cy="328" r="52" fill="none"/>
+    <circle cx="344" cy="328" r="52" fill="none"/>
+    <path d="M168 328 L 224 168 L 344 328"/>
+    <path d="M224 168 L 312 168 L 344 328"/>
+    <line x1="196" y1="140" x2="276" y2="140" stroke-width="22"/>
+    <path d="M224 168 Q 200 140 168 128"/>
+  </g>
+  <circle cx="392" cy="152" r="56" fill="#FF3B30" stroke="#FFFFFF" stroke-width="12"/>
+  <path d="M392 118 L392 168" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="392" cy="186" r="8" fill="#FFFFFF"/>
+</svg>
