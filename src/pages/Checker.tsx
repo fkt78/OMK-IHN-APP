@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { checkerItems, type CheckerItem, type AudienceType } from '../data/violations'
+import { CheckmarkIcon, AlertIcon } from '../components/Icons'
 
 export default function Checker() {
   const [audience, setAudience] = useState<AudienceType>('cyclist')
@@ -101,15 +102,13 @@ export default function Checker() {
 
 /* ── 判定ドット ── */
 function ResultDot({ result }: { result: CheckerItem['result'] }) {
-  const color = result === 'violation' ? 'var(--ios-red)'
-               : result === 'safe'     ? 'var(--ios-green)'
-               :                        'var(--ios-orange)'
-  return (
-    <span
-      className="w-2 h-2 rounded-full flex-shrink-0"
-      style={{ background: color }}
-    />
-  )
+  if (result === 'violation') {
+    return <AlertIcon size={16} color="var(--ios-red)" />
+  } else if (result === 'safe') {
+    return <CheckmarkIcon size={16} color="var(--ios-green)" />
+  } else {
+    return <AlertIcon size={16} color="var(--ios-orange)" />
+  }
 }
 
 /* ── 判定結果 ── */
@@ -123,7 +122,6 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
     conditional: 'linear-gradient(160deg,#FFB347,#FF9500)',
   }
   const gradient = gradients[item.result]
-  const resultEmoji = isViolation ? '🚨' : isSafe ? '✅' : '⚠️'
   const resultText  = isViolation ? '違反！' : isSafe ? 'セーフ！' : '条件次第'
 
   return (
@@ -143,7 +141,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
         >
           ‹ 戻る
         </button>
-        <div className="text-6xl mb-3 animate-bounce-in">{resultEmoji}</div>
+        <div className="mb-3 animate-bounce-in flex justify-center">
+          {isViolation && <AlertIcon size={64} color="#fff" />}
+          {isSafe && <CheckmarkIcon size={64} color="#fff" />}
+          {!isViolation && !isSafe && <AlertIcon size={64} color="#fff" />}
+        </div>
         <h1 className="text-4xl font-black text-white mb-1">{resultText}</h1>
         <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
           {isViolation ? '青切符の対象になります' : isSafe ? 'この行為は問題ありません' : '状況によって変わります'}

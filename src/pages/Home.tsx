@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { reforms } from '../data/reforms'
+import { BicycleIcon, CarIcon, AlertIcon } from '../components/Icons'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -40,7 +41,7 @@ export default function Home() {
           className="mt-4 rounded-2xl px-4 py-3 flex items-center gap-3"
           style={{ background: 'rgba(255,255,255,.22)', backdropFilter: 'blur(8px)' }}
         >
-          <span className="text-2xl">🚨</span>
+          <AlertIcon size={28} color="#fff" />
           <div>
             <p className="text-white font-black text-sm">2026年4月1日スタート！</p>
             <p style={{ color: 'rgba(255,255,255,.82)', fontSize: 12 }} className="mt-0.5">
@@ -65,8 +66,8 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { emoji: '🚲', title: '自転車通勤者', sub: '自分の行動を確認', path: '/quiz?mode=cyclist', bg: 'var(--fill-pink)', border: 'var(--pink-light)' },
-              { emoji: '🚗', title: 'ドライバー',   sub: '自転車への新義務を確認', path: '/quiz?mode=driver', bg: '#FFF5E6', border: '#FFDDAA' },
+              { Icon: BicycleIcon, title: '自転車通勤者', sub: '自分の行動を確認', path: '/quiz?mode=cyclist', bg: 'var(--fill-pink)', border: 'var(--pink-light)', color: '#E8849A' },
+              { Icon: CarIcon,     title: 'ドライバー',   sub: '自転車への新義務を確認', path: '/quiz?mode=driver', bg: '#FFF5E6', border: '#FFDDAA', color: '#FF9500' },
             ].map(btn => (
               <button
                 key={btn.path}
@@ -74,7 +75,9 @@ export default function Home() {
                 className="ios-press rounded-2xl p-4 text-center"
                 style={{ background: btn.bg, border: `1.5px solid ${btn.border}` }}
               >
-                <div className="text-3xl mb-2">{btn.emoji}</div>
+                <div className="mb-2 flex justify-center">
+                  <btn.Icon size={44} color={btn.color} />
+                </div>
                 <div
                   className="font-bold text-sm"
                   style={{ color: 'var(--label-primary)' }}

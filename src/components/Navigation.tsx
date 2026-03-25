@@ -1,11 +1,18 @@
 import { NavLink } from 'react-router-dom'
+import {
+  NavHomeIcon,
+  NavQuizIcon,
+  NavCheckerIcon,
+  NavRulesIcon,
+  NavFinesIcon,
+} from './Icons'
 
 const tabs = [
-  { path: '/',        label: 'ホーム',   symbol: '🏠' },
-  { path: '/quiz',    label: 'クイズ',   symbol: '🎯' },
-  { path: '/checker', label: 'チェック', symbol: '⚡' },
-  { path: '/rules',   label: 'ルール',   symbol: '📚' },
-  { path: '/fines',   label: '反則金',   symbol: '💰' },
+  { path: '/',        label: 'ホーム',   Icon: NavHomeIcon },
+  { path: '/quiz',    label: 'クイズ',   Icon: NavQuizIcon },
+  { path: '/checker', label: 'チェック', Icon: NavCheckerIcon },
+  { path: '/rules',   label: 'ルール',   Icon: NavRulesIcon },
+  { path: '/fines',   label: '反則金',   Icon: NavFinesIcon },
 ]
 
 export default function Navigation() {
@@ -26,21 +33,17 @@ export default function Navigation() {
             key={tab.path}
             to={tab.path}
             end={tab.path === '/'}
-            className={({ isActive }) =>
-              `flex flex-col items-center justify-center flex-1 py-2 gap-0.5 ios-press
-               text-[10px] font-semibold tracking-tight transition-colors
-               ${isActive ? 'text-[#E8849A]' : 'text-[rgba(60,60,67,.45)]'}`
-            }
+            className="flex flex-col items-center justify-center flex-1 py-2 gap-0.5 ios-press transition-colors"
           >
             {({ isActive }) => (
               <>
+                <tab.Icon size={24} isActive={isActive} />
                 <span
-                  className="text-[22px] leading-none mb-0.5"
-                  style={{ filter: isActive ? 'none' : 'grayscale(.5)' }}
+                  className="text-[10px] font-semibold tracking-tight"
+                  style={{ color: isActive ? '#E8849A' : 'rgba(60,60,67,.45)' }}
                 >
-                  {tab.symbol}
+                  {tab.label}
                 </span>
-                <span>{tab.label}</span>
               </>
             )}
           </NavLink>
