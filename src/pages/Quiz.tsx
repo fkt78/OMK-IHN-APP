@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { cyclistQuiz, driverQuiz, type QuizQuestion } from '../data/quiz'
 import {
@@ -24,7 +24,10 @@ export default function Quiz() {
 
   const [audience, setAudience] = useState<'cyclist' | 'driver'>(initialMode || 'cyclist')
   const [mode, setMode]         = useState<Mode>(initialMode ? 'playing' : 'select')
-  const [questions, setQuestions] = useState<QuizQuestion[]>([])
+  const [questions, setQuestions] = useState<QuizQuestion[]>(() =>
+    (initialMode === 'driver' ? [...driverQuiz] : [...cyclistQuiz])
+      .sort(() => Math.random() - 0.5)
+  )
   const [currentIdx, setCurrentIdx] = useState(0)
   const [selected, setSelected]     = useState<number | null>(null)
   const [answered, setAnswered]     = useState(false)
@@ -32,14 +35,13 @@ export default function Quiz() {
   const [shakeKey, setShakeKey]     = useState(0)
   const [showStar, setShowStar]     = useState(false)
 
-  useEffect(() => {
-    const q = (audience === 'cyclist' ? [...cyclistQuiz] : [...driverQuiz])
+  const shuffleFor = (a: 'cyclist' | 'driver'): QuizQuestion[] =>
+    (a === 'cyclist' ? [...cyclistQuiz] : [...driverQuiz])
       .sort(() => Math.random() - 0.5)
-    setQuestions(q)
-  }, [audience])
 
   const startQuiz = (a: 'cyclist' | 'driver') => {
     setAudience(a)
+    setQuestions(shuffleFor(a))
     setMode('playing')
     setCurrentIdx(0)
     setSelected(null)
