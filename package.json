@@ -1,11 +1,15 @@
 {
   "name": "-",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "version:verify": "node scripts/verify-version.mjs",
+    "version:patch": "node scripts/bump-version.mjs patch",
+    "version:minor": "node scripts/bump-version.mjs minor",
+    "version:major": "node scripts/bump-version.mjs major",
+    "build": "npm run version:verify && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

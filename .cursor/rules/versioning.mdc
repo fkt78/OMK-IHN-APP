@@ -1,0 +1,25 @@
+---
+description: コード変更時は必ずセマンティックバージョンを上げ、package.json と src/version.ts を同期する
+alwaysApply: true
+---
+
+# バージョン管理（セマンティックバージョニング）
+
+形式は **Major.Minor.Patch**（例: `1.1.1`）。桁の意味は次のとおり。
+
+| 桁 | 上げるタイミング |
+|----|------------------|
+| **Major** | 大きな仕様変更・互換性のない変更 |
+| **Minor** | 機能追加・後方互換を保った変更 |
+| **Patch** | バグ修正・文言・スタイル・小さなUI調整など、**コードが1行でも変わった**軽微な変更 |
+
+## 必須ルール
+
+- **アプリのコード（`src/` や設定）を少しでも変えたコミットでは、必ず Patch 以上を上げる。** 変更とバージョンがずれると「最新がどれか」が追えなくなる。
+- **`package.json` の `version` と `src/version.ts` の `APP_VERSION` は常に同一の文字列にする。** ビルド時に `npm run version:verify` で不一致を検出する。
+- バージョンを上げるときは `node scripts/bump-version.mjs patch`（または `minor` / `major`）で両方を一度に更新してよい。
+
+## 参照ファイル
+
+- `package.json` — `version` フィールド
+- `src/version.ts` — `APP_VERSION` と表示用 `version.displayText`
