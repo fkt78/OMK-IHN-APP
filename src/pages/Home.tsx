@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { reforms } from '../data/reforms'
 import { BicycleIcon, CarIcon, AlertIcon } from '../components/Icons'
+import { version } from '../version'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -164,6 +165,10 @@ export default function Home() {
           有限会社 吹田総業 AI事業部 × Claude
           <br />
           情報は警察庁・警視庁の公開情報に基づきます
+          <br />
+          <span style={{ fontSize: '10px', marginTop: '4px', display: 'block' }}>
+            {version.displayText}
+          </span>
         </p>
       </div>
     </div>
