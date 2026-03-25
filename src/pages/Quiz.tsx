@@ -454,7 +454,7 @@ function NavHeader({ title, onBack }: { title: string; onBack?: () => void }) {
       {onBack && (
         <button
           onClick={onBack}
-          className="ios-press mr-3 text-white font-semibold text-sm"
+          className="ios-press mr-3 text-white font-semibold text-sm relative z-10"
         >
           ‹ 戻る
         </button>

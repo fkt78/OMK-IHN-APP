@@ -288,12 +288,12 @@ function ResultView({
       >
         <button
           onClick={onBack}
-          className="ios-press absolute left-4 text-white font-semibold text-sm"
+          className="ios-press absolute left-4 text-white font-semibold text-sm z-10"
           style={{ top: 'max(56px, calc(env(safe-area-inset-top) + 12px))' }}
         >
           ‹ 戻る
         </button>
-        <div className="mb-3 animate-bounce-in flex justify-center">
+        <div className="mb-3 animate-bounce-in flex justify-center" style={{ position: 'relative', zIndex: 0 }}>
           {isViolation && <AlertIcon size={64} color="#fff" />}
           {isSafe && <CheckmarkIcon size={64} color="#fff" />}
           {!isViolation && !isSafe && <AlertIcon size={64} color="#fff" />}
