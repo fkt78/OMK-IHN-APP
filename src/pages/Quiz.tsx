@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { cyclistQuiz, driverQuiz, type QuizQuestion } from '../data/quiz'
+import {
+  BicycleIcon,
+  CarIcon,
+  TrophyIcon,
+  CelebrationIcon,
+  AlertIcon,
+  CheckmarkIcon,
+  RefreshIcon,
+  ClipboardIcon,
+  CoinIcon,
+} from '../components/Icons'
 
 type Mode = 'select' | 'playing' | 'result'
 
@@ -78,7 +89,8 @@ export default function Quiz() {
             {[
               {
                 a: 'cyclist' as const,
-                emoji: '🚲',
+                Icon: BicycleIcon,
+                iconColor: '#E8849A',
                 title: '自転車乗り編',
                 sub: `あなたの通勤ルーティン、どれだけ違反してる？`,
                 count: cyclistQuiz.length,
@@ -87,7 +99,8 @@ export default function Quiz() {
               },
               {
                 a: 'driver' as const,
-                emoji: '🚗',
+                Icon: CarIcon,
+                iconColor: '#FF9500',
                 title: 'ドライバー編',
                 sub: '2026年4月から、ドライバーの義務も変わった。',
                 count: driverQuiz.length,
@@ -104,7 +117,9 @@ export default function Quiz() {
                   border: `1.5px solid ${opt.border}`,
                 }}
               >
-                <div className="text-4xl mb-3">{opt.emoji}</div>
+                <div className="mb-3">
+                  <opt.Icon size={48} color={opt.iconColor} />
+                </div>
                 <h2
                   className="font-black text-[18px] mb-1"
                   style={{ color: 'var(--label-primary)' }}
@@ -136,11 +151,19 @@ export default function Quiz() {
   if (mode === 'result') {
     const total = questions.length
     const pct   = Math.round((score / total) * 100)
-    const [emoji, msg] =
-      pct === 100 ? ['🏆', '完璧や！青切符の心配ゼロ！'] :
-      pct >= 80   ? ['🎉', 'なかなかやるやん。あとちょっと！'] :
-      pct >= 60   ? ['😅', '惜しい…でもまだ危ない。'] :
-                   ['🚨', '危険！今すぐルールを確認して！']
+
+    const getResultIcon = () => {
+      if (pct === 100) return <TrophyIcon size={64} color="#FF9500" />
+      if (pct >= 80)   return <CelebrationIcon size={64} color="var(--pink-primary)" />
+      if (pct >= 60)   return <AlertIcon size={64} color="#FF9500" />
+      return <AlertIcon size={64} color="var(--ios-red)" />
+    }
+
+    const msg =
+      pct === 100 ? '完璧や！青切符の心配ゼロ！' :
+      pct >= 80   ? 'なかなかやるやん。あとちょっと！' :
+      pct >= 60   ? '惜しい…でもまだ危ない。' :
+                   '危険！今すぐルールを確認して！'
 
     return (
       <div
@@ -151,7 +174,7 @@ export default function Quiz() {
           className="w-full max-w-sm rounded-3xl p-7 text-center animate-pop"
           style={{ background: 'var(--bg-primary)', boxShadow: '0 8px 32px rgba(196,80,106,.18)' }}
         >
-          <div className="text-6xl mb-4">{emoji}</div>
+          <div className="mb-4 flex justify-center">{getResultIcon()}</div>
           <h2 className="text-2xl font-black mb-1" style={{ color: 'var(--label-primary)' }}>
             {total}問中{' '}
             <span style={{ color: 'var(--pink-primary)' }}>{score}問</span> 正解！
@@ -174,8 +197,9 @@ export default function Quiz() {
               className="rounded-2xl p-4 mb-5 text-left"
               style={{ background: '#FFF5F5', border: '1px solid #FFDDDD' }}
             >
-              <p className="font-bold text-sm mb-1" style={{ color: 'var(--ios-red)' }}>
-                ⚠️ Claudeより
+              <p className="flex items-center gap-1.5 font-bold text-sm mb-1" style={{ color: 'var(--ios-red)' }}>
+                <AlertIcon size={14} color="var(--ios-red)" />
+                Claudeより
               </p>
               <p className="text-xs leading-relaxed" style={{ color: '#C0404A' }}>
                 統計的に見れば、{100 - pct}%の誤答率は改善の余地があります。
@@ -190,14 +214,19 @@ export default function Quiz() {
               className="ios-press w-full py-4 rounded-2xl font-black text-white"
               style={{ background: 'linear-gradient(135deg,var(--pink-primary),var(--pink-deep))' }}
             >
-              もう一度挑戦 🔄
+              <span className="flex items-center justify-center gap-2">
+                もう一度挑戦
+                <RefreshIcon size={18} color="#fff" />
+              </span>
             </button>
             <button
               onClick={() => startQuiz(audience === 'cyclist' ? 'driver' : 'cyclist')}
-              className="ios-press w-full py-4 rounded-2xl font-bold"
+              className="ios-press w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2"
               style={{ background: 'var(--fill-pink)', color: 'var(--pink-deep)' }}
             >
-              {audience === 'cyclist' ? '🚗 ドライバー編に挑戦' : '🚲 自転車乗り編に挑戦'}
+              {audience === 'cyclist'
+                ? <><CarIcon size={18} color="var(--pink-deep)" /> ドライバー編に挑戦</>
+                : <><BicycleIcon size={18} color="var(--pink-deep)" /> 自転車乗り編に挑戦</>}
             </button>
           </div>
         </div>
@@ -221,8 +250,10 @@ export default function Quiz() {
         }}
       >
         <div className="flex justify-between items-center mb-2 max-w-md mx-auto">
-          <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,.8)' }}>
-            {audience === 'cyclist' ? '🚲 自転車乗り編' : '🚗 ドライバー編'}
+          <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'rgba(255,255,255,.8)' }}>
+            {audience === 'cyclist'
+              ? <><BicycleIcon size={14} color="rgba(255,255,255,.8)" /> 自転車乗り編</>
+              : <><CarIcon size={14} color="rgba(255,255,255,.8)" /> ドライバー編</>}
           </span>
           <div className="flex items-center gap-2">
             {q.isNew && (
@@ -263,10 +294,11 @@ export default function Quiz() {
           style={{ background: 'var(--bg-primary)' }}
         >
           <p
-            className="text-[11px] font-semibold mb-2 uppercase tracking-wide"
+            className="flex items-center gap-1.5 text-[11px] font-semibold mb-2 uppercase tracking-wide"
             style={{ color: 'var(--pink-primary)' }}
           >
-            📋 シナリオ
+            <ClipboardIcon size={14} color="var(--pink-primary)" />
+            シナリオ
           </p>
           <p
             className="text-sm leading-relaxed rounded-xl px-3 py-2.5"
@@ -349,10 +381,12 @@ export default function Quiz() {
               }}
             >
               <p
-                className="font-black text-[15px] mb-2"
+                className="flex items-center gap-2 font-black text-[15px] mb-2"
                 style={{ color: selected === q.correctIndex ? '#166534' : '#9F1239' }}
               >
-                {selected === q.correctIndex ? '🎉 正解！' : '💦 不正解…'}
+                {selected === q.correctIndex
+                  ? <><CheckmarkIcon size={18} color="#166534" /> 正解！</>
+                  : <><AlertIcon size={18} color="#9F1239" /> 不正解…</>}
               </p>
               <p
                 className="text-sm leading-relaxed"
@@ -362,10 +396,11 @@ export default function Quiz() {
               </p>
               {q.fine && (
                 <span
-                  className="inline-block mt-3 text-xs font-bold px-3 py-1 rounded-full text-white"
+                  className="inline-flex items-center gap-1 mt-3 text-xs font-bold px-3 py-1 rounded-full text-white"
                   style={{ background: 'var(--ios-red)' }}
                 >
-                  💰 反則金：{q.fine}
+                  <CoinIcon size={12} color="#fff" />
+                  反則金：{q.fine}
                 </span>
               )}
             </div>
@@ -378,7 +413,7 @@ export default function Quiz() {
                 boxShadow: '0 4px 16px rgba(232,132,154,.35)',
               }}
             >
-              {currentIdx < questions.length - 1 ? '次の問題 →' : '結果を見る 🏁'}
+              {currentIdx < questions.length - 1 ? '次の問題 →' : '結果を見る →'}
             </button>
           </div>
         )}

@@ -8,7 +8,9 @@ import {
   SideSpaceIcon,
   BeerIcon,
   SnailIcon,
-  DocumentIcon
+  DocumentIcon,
+  TargetIcon,
+  BotIcon,
 } from '../components/Icons'
 import { version } from '../version'
 
@@ -123,12 +125,12 @@ export default function Home() {
           style={{ background: 'linear-gradient(135deg,#3A1A22,#5C2035)' }}
         >
           <div className="flex items-start gap-3">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-base flex-shrink-0"
-              style={{ background: 'var(--pink-primary)' }}
-            >
-              🤖
-            </div>
+          <div
+            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: 'var(--pink-primary)' }}
+          >
+            <BotIcon size={20} color="#fff" />
+          </div>
             <div>
               <p
                 className="text-xs font-bold mb-1.5"
@@ -157,7 +159,10 @@ export default function Home() {
             boxShadow: '0 4px 16px rgba(232,132,154,.4)',
           }}
         >
-          🎯 クイズで腕試し！
+          <span className="flex items-center justify-center gap-2">
+            <TargetIcon size={22} color="#fff" />
+            クイズで腕試し！
+          </span>
           <span
             className="block text-xs font-medium mt-0.5"
             style={{ color: 'rgba(255,255,255,.75)' }}

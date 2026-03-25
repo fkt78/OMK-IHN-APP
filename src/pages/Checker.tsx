@@ -20,7 +20,13 @@ import {
   SnailIcon,
   HouseIcon,
   FlashlightIcon,
-  DocumentIcon
+  DocumentIcon,
+  LightningIcon,
+  BicycleIcon,
+  CoinIcon,
+  ClockIcon,
+  BookOpenIcon,
+  BotIcon,
 } from '../components/Icons'
 
 export default function Checker() {
@@ -41,7 +47,10 @@ export default function Checker() {
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
-        <h1 className="font-black text-[28px] text-white mb-0.5">⚡ 即時チェック</h1>
+        <div className="flex items-center gap-2 mb-0.5">
+          <LightningIcon size={28} color="#fff" />
+          <h1 className="font-black text-[28px] text-white">即時チェック</h1>
+        </div>
         <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
           この行為、アウト？セーフ？一発判定！
         </p>
@@ -52,8 +61,8 @@ export default function Checker() {
           style={{ background: 'rgba(255,255,255,.2)' }}
         >
           {[
-            { key: 'cyclist' as AudienceType, label: '🚲 自転車乗り' },
-            { key: 'driver'  as AudienceType, label: '🚗 ドライバー' },
+            { key: 'cyclist' as AudienceType, label: '自転車乗り', Icon: BicycleIcon },
+            { key: 'driver'  as AudienceType, label: 'ドライバー',  Icon: CarIcon },
           ].map(opt => (
             <button
               key={opt.key}
@@ -65,7 +74,13 @@ export default function Checker() {
                 boxShadow: audience === opt.key ? '0 1px 4px rgba(0,0,0,.12)' : 'none',
               }}
             >
-              {opt.label}
+              <span className="flex items-center justify-center gap-1.5">
+                <opt.Icon
+                  size={16}
+                  color={audience === opt.key ? 'var(--pink-deep)' : 'rgba(255,255,255,.85)'}
+                />
+                {opt.label}
+              </span>
             </button>
           ))}
         </div>
@@ -77,7 +92,7 @@ export default function Checker() {
           className="text-[11px] font-semibold uppercase tracking-widest mb-2 px-1"
           style={{ color: 'var(--label-secondary)' }}
         >
-          👇 あてはまる行為をタップ
+          あてはまる行為をタップ
         </p>
 
         <div
@@ -142,14 +157,12 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
   const isViolation   = item.result === 'violation'
   const isSafe        = item.result === 'safe'
 
-  // 金額抽出関数
   const extractAmount = (fineText: string): number | null => {
-    const match = fineText.match(/(\d+,?\d*)/);
+    const match = fineText.match(/(\d+,?\d*)/)
     if (!match) return null
     return parseInt(match[1].replace(/,/g, ''), 10)
   }
 
-  // 労働時間計算
   const calculateLaborHours = (): number | null => {
     if (!hourlyRate || !item.fineText) return null
     const rate = parseInt(hourlyRate, 10)
@@ -159,7 +172,6 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
     return Math.ceil(amount / rate)
   }
 
-  // 機会損失の計算
   const opportunities = [
     { name: '牛丼', price: 450, unit: '杯' },
     { name: 'Netflix', price: 1500, unit: 'ヶ月' },
@@ -199,7 +211,7 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
       >
         <button
           onClick={onBack}
-          className="ios-press absolute left-4 top-14 text-white font-semibold text-sm"
+          className="ios-press absolute left-4 text-white font-semibold text-sm"
           style={{ top: 'max(56px, calc(env(safe-area-inset-top) + 12px))' }}
         >
           ‹ 戻る
@@ -228,7 +240,7 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
             確認した行為
           </p>
           <div className="flex items-center gap-3">
-            <div className="text-3xl">
+            <div className="flex-shrink-0">
               <EmojiIconRenderer emoji={item.emoji} size={32} />
             </div>
             <p
@@ -247,10 +259,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
             style={{ background: '#FFF5F5', border: '1px solid #FECDD3' }}
           >
             <p
-              className="text-[11px] font-semibold mb-1"
+              className="flex items-center gap-1.5 text-[11px] font-semibold mb-1"
               style={{ color: 'var(--ios-red)' }}
             >
-              💰 反則金
+              <CoinIcon size={14} color="var(--ios-red)" />
+              反則金
             </p>
             <p
               className="text-3xl font-black"
@@ -273,10 +286,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
             style={{ background: '#FFF5F5', border: '1px solid #FECDD3' }}
           >
             <p
-              className="text-[11px] font-semibold mb-3"
+              className="flex items-center gap-1.5 text-[11px] font-semibold mb-3"
               style={{ color: 'var(--ios-red)' }}
             >
-              ⏰ あなたの労働時間コスト
+              <ClockIcon size={14} color="var(--ios-red)" />
+              あなたの労働時間コスト
             </p>
 
             {!showCostBreakdown ? (
@@ -366,10 +380,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
             style={{ background: '#FFFBF0', border: '1px solid #FFE4A0' }}
           >
             <p
-              className="text-[11px] font-semibold mb-1"
+              className="flex items-center gap-1.5 text-[11px] font-semibold mb-1"
               style={{ color: 'var(--ios-orange)' }}
             >
-              ⚠️ 条件
+              <AlertIcon size={14} color="var(--ios-orange)" />
+              条件
             </p>
             <p
               className="text-sm font-medium"
@@ -386,10 +401,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
           style={{ background: 'var(--bg-primary)' }}
         >
           <p
-            className="text-[11px] font-semibold mb-2 uppercase tracking-wide"
+            className="flex items-center gap-1.5 text-[11px] font-semibold mb-2 uppercase tracking-wide"
             style={{ color: 'var(--label-secondary)' }}
           >
-            📖 解説
+            <BookOpenIcon size={14} color="var(--label-secondary)" />
+            解説
           </p>
           <p
             className="text-sm leading-relaxed"
@@ -414,10 +430,10 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
         >
           <div className="flex items-start gap-3">
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0"
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
               style={{ background: 'var(--pink-primary)' }}
             >
-              🤖
+              <BotIcon size={18} color="#fff" />
             </div>
             <div>
               <p

@@ -6,7 +6,9 @@ import {
   BeerIcon,
   FlashlightIcon,
   BicycleIcon,
-  CarIcon
+  CarIcon,
+  BookOpenIcon,
+  CoinIcon,
 } from '../components/Icons'
 
 const categoryLabels: Record<RuleCategory, string> = {
@@ -60,7 +62,10 @@ export default function Rules() {
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
-        <h1 className="font-black text-[28px] text-white mb-0.5">📚 ルール一覧</h1>
+        <div className="flex items-center gap-2 mb-0.5">
+          <BookOpenIcon size={28} color="#fff" />
+          <h1 className="font-black text-[28px] text-white">ルール一覧</h1>
+        </div>
         <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
           知らんかったじゃ済まへんルール集
         </p>
@@ -71,8 +76,8 @@ export default function Rules() {
           style={{ background: 'rgba(255,255,255,.2)' }}
         >
           {[
-            { key: 'cyclist' as AudienceType, label: '🚲 自転車乗り' },
-            { key: 'driver'  as AudienceType, label: '🚗 ドライバー' },
+            { key: 'cyclist' as AudienceType, label: '自転車乗り', Icon: BicycleIcon },
+            { key: 'driver'  as AudienceType, label: 'ドライバー',  Icon: CarIcon },
           ].map(opt => (
             <button
               key={opt.key}
@@ -84,7 +89,13 @@ export default function Rules() {
                 boxShadow: audience === opt.key ? '0 1px 4px rgba(0,0,0,.12)' : 'none',
               }}
             >
-              {opt.label}
+              <span className="flex items-center justify-center gap-1.5">
+                <opt.Icon
+                  size={16}
+                  color={audience === opt.key ? 'var(--pink-deep)' : 'rgba(255,255,255,.85)'}
+                />
+                {opt.label}
+              </span>
             </button>
           ))}
         </div>
@@ -169,10 +180,11 @@ export default function Rules() {
                         </div>
                         {rule.fine && (
                           <span
-                            className="text-xs font-semibold"
+                            className="flex items-center gap-1 text-xs font-semibold"
                             style={{ color: 'var(--ios-red)' }}
                           >
-                            💰 {rule.fine}
+                            <CoinIcon size={13} color="var(--ios-red)" />
+                            {rule.fine}
                           </span>
                         )}
                       </div>

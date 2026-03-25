@@ -363,3 +363,101 @@ export function SideSpaceIcon({ size = 48, color = 'currentColor' }) {
     </svg>
   )
 }
+
+/* ── 追加アイコンセット ── */
+
+export function LightbulbIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 18 36 L 18 33 Q 10 29 10 22 Q 10 10 24 10 Q 38 10 38 22 Q 38 29 30 33 L 30 36 Z" />
+      <line x1="18" y1="36" x2="30" y2="36" />
+      <line x1="20" y1="40" x2="28" y2="40" />
+      <line x1="22" y1="44" x2="26" y2="44" />
+    </svg>
+  )
+}
+
+export function TrophyIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 15 10 L 33 10 L 33 26 Q 33 36 24 36 Q 15 36 15 26 Z" />
+      <path d="M 15 14 L 8 14 Q 8 24 15 24" />
+      <path d="M 33 14 L 40 14 Q 40 24 33 24" />
+      <line x1="20" y1="36" x2="20" y2="42" />
+      <line x1="28" y1="36" x2="28" y2="42" />
+      <line x1="16" y1="42" x2="32" y2="42" />
+    </svg>
+  )
+}
+
+export function CelebrationIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 24 6 L 27.5 18 L 40 18 L 30 26 L 33.5 38 L 24 30 L 14.5 38 L 18 26 L 8 18 L 20.5 18 Z" />
+    </svg>
+  )
+}
+
+export function ClockIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="24" cy="24" r="18" />
+      <path d="M 24 13 L 24 24 L 31 30" strokeWidth="2" />
+    </svg>
+  )
+}
+
+export function ClipboardIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="12" y="14" width="24" height="28" rx="2" />
+      <path d="M 19 14 L 19 10 Q 19 8 21 8 L 27 8 Q 29 8 29 10 L 29 14" />
+      <line x1="16" y1="22" x2="32" y2="22" />
+      <line x1="16" y1="28" x2="32" y2="28" />
+      <line x1="16" y1="34" x2="26" y2="34" />
+    </svg>
+  )
+}
+
+export function LightningIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 28 6 L 14 26 L 24 26 L 20 42 L 34 22 L 24 22 Z" />
+    </svg>
+  )
+}
+
+export function BotIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="10" y="18" width="28" height="22" rx="4" />
+      <circle cx="19" cy="27" r="3" fill={color} stroke="none" />
+      <circle cx="29" cy="27" r="3" fill={color} stroke="none" />
+      <line x1="19" y1="34" x2="29" y2="34" />
+      <line x1="24" y1="18" x2="24" y2="12" strokeWidth="2" />
+      <circle cx="24" cy="10" r="2.5" fill={color} stroke="none" />
+      <line x1="10" y1="32" x2="6" y2="36" />
+      <line x1="38" y1="32" x2="42" y2="36" />
+    </svg>
+  )
+}
+
+export function BookOpenIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 24 14 Q 16 10 8 12 L 8 38 Q 16 36 24 40" />
+      <path d="M 24 14 Q 32 10 40 12 L 40 38 Q 32 36 24 40" />
+      <line x1="24" y1="14" x2="24" y2="40" />
+    </svg>
+  )
+}
+
+export function TargetIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="24" cy="24" r="18" />
+      <circle cx="24" cy="24" r="10" />
+      <circle cx="24" cy="24" r="3" fill={color} stroke="none" />
+    </svg>
+  )
+}

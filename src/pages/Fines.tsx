@@ -1,6 +1,17 @@
+import {
+  CoinIcon,
+  LightbulbIcon,
+  BotIcon,
+  BicycleIcon,
+  BeerIcon,
+  CarIcon,
+  HouseIcon,
+} from '../components/Icons'
+
 const fineData = [
   {
-    group: '🚲 自転車（青切符・2026年4月〜）',
+    groupLabel: '自転車（青切符・2026年4月〜）',
+    iconKey: 'bicycle' as const,
     isNew: true,
     items: [
       { act: 'スマホながら運転',           fine: '12,000円', criminal: '6ヶ月以下懲役/10万円以下罰金' },
@@ -14,7 +25,8 @@ const fineData = [
     ],
   },
   {
-    group: '🍺 飲酒・重大違反（刑事罰）',
+    groupLabel: '飲酒・重大違反（刑事罰）',
+    iconKey: 'beer' as const,
     isNew: true,
     items: [
       { act: '酒気帯び運転',                         fine: '—', criminal: '3年以下懲役/50万円以下罰金' },
@@ -23,7 +35,8 @@ const fineData = [
     ],
   },
   {
-    group: '🚗 ドライバー（自転車関連・2026年4月〜）',
+    groupLabel: 'ドライバー（自転車関連・2026年4月〜）',
+    iconKey: 'car' as const,
     isNew: true,
     items: [
       { act: '側方間隔不足（追い越し時）', fine: '反則金あり', criminal: '違反点数・刑事罰の可能性' },
@@ -31,13 +44,24 @@ const fineData = [
     ],
   },
   {
-    group: '🏘️ 生活道路速度超過（2026年9月〜）',
+    groupLabel: '生活道路速度超過（2026年9月〜）',
+    iconKey: 'house' as const,
     isNew: true,
     items: [
       { act: '生活道路30km/h超過',         fine: '速度により異なる', criminal: '速度超過反則金・刑事罰' },
     ],
   },
 ]
+
+function FineGroupIcon({ iconKey, size = 20 }: { iconKey: typeof fineData[0]['iconKey']; size?: number }) {
+  const color = 'var(--pink-primary)'
+  switch (iconKey) {
+    case 'bicycle': return <BicycleIcon size={size} color={color} />
+    case 'beer':    return <BeerIcon    size={size} color={color} />
+    case 'car':     return <CarIcon     size={size} color={color} />
+    case 'house':   return <HouseIcon   size={size} color={color} />
+  }
+}
 
 export default function Fines() {
   return (
@@ -50,7 +74,10 @@ export default function Fines() {
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
-        <h1 className="font-black text-[28px] text-white mb-0.5">💰 反則金一覧</h1>
+        <div className="flex items-center gap-2 mb-0.5">
+          <CoinIcon size={28} color="#fff" />
+          <h1 className="font-black text-[28px] text-white">反則金一覧</h1>
+        </div>
         <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
           これが「青切符」の現実や
         </p>
@@ -62,7 +89,9 @@ export default function Fines() {
           className="rounded-2xl p-4 mb-5 flex gap-3"
           style={{ background: 'var(--bg-primary)' }}
         >
-          <span className="text-2xl flex-shrink-0">💡</span>
+          <div className="flex-shrink-0 mt-0.5">
+            <LightbulbIcon size={28} color="var(--pink-primary)" />
+          </div>
           <div>
             <p
               className="font-bold text-[13px] mb-1"
@@ -87,11 +116,12 @@ export default function Fines() {
         {fineData.map((group, gi) => (
           <div key={gi} className="mb-5">
             <div className="flex items-center gap-2 mb-2 px-1">
+              <FineGroupIcon iconKey={group.iconKey} size={18} />
               <p
                 className="text-[13px] font-bold"
                 style={{ color: 'var(--label-primary)' }}
               >
-                {group.group}
+                {group.groupLabel}
               </p>
               {group.isNew && (
                 <span
@@ -165,10 +195,10 @@ export default function Fines() {
         >
           <div className="flex items-start gap-3">
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0"
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
               style={{ background: 'var(--pink-primary)' }}
             >
-              🤖
+              <BotIcon size={18} color="#fff" />
             </div>
             <div>
               <p
