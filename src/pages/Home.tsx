@@ -224,7 +224,7 @@ function ReformIconRenderer({ emoji }: { emoji: string }) {
     case '📚':
       return <DocumentIcon {...iconProps} />
     default:
-      return <span>{emoji}</span>
+      return <AlertIcon {...iconProps} />
   }
 }
 

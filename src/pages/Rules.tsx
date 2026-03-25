@@ -9,6 +9,18 @@ import {
   CarIcon,
   BookOpenIcon,
   CoinIcon,
+  ProhibitIcon,
+  ArrowLeftIcon,
+  MoonIcon,
+  UmbrellaIcon,
+  HeadphoneIcon,
+  PeopleIcon,
+  CoupleIcon,
+  PersonWalkIcon,
+  SideSpaceIcon,
+  HouseIcon,
+  StarIcon,
+  AlertIcon,
 } from '../components/Icons'
 
 const categoryLabels: Record<RuleCategory, string> = {
@@ -22,19 +34,22 @@ const categoryLabels: Record<RuleCategory, string> = {
 }
 
 function getCategoryIcon(category: RuleCategory) {
+  const c = 'var(--pink-primary)'
   switch (category) {
     case 'signal':
-      return <TrafficLightIcon size={20} color="var(--pink-primary)" />
+      return <TrafficLightIcon size={20} color={c} />
     case 'smartphone':
-      return <SmartphoneIcon size={20} color="var(--pink-primary)" />
+      return <SmartphoneIcon size={20} color={c} />
     case 'alcohol':
-      return <BeerIcon size={20} color="var(--pink-primary)" />
+      return <BeerIcon size={20} color={c} />
+    case 'road':
+      return <ArrowLeftIcon size={20} color={c} />
     case 'equipment':
-      return <FlashlightIcon size={20} color="var(--pink-primary)" />
+      return <FlashlightIcon size={20} color={c} />
     case 'others':
-      return <BicycleIcon size={20} color="var(--pink-primary)" />
+      return <BicycleIcon size={20} color={c} />
     case 'driver':
-      return <CarIcon size={20} color="var(--pink-primary)" />
+      return <CarIcon size={20} color={c} />
     default:
       return null
   }
@@ -112,7 +127,8 @@ export default function Rules() {
             borderColor: showNewOnly ? 'var(--ios-red)' : 'var(--separator)',
           }}
         >
-          ★ 2026年改正のみ
+          <StarIcon size={14} color={showNewOnly ? '#fff' : 'var(--pink-primary)'} />
+          2026年改正のみ
         </button>
         <span
           className="text-xs font-medium"
@@ -239,24 +255,45 @@ export default function Rules() {
   )
 }
 
-/* ── ルール絵文字→アイコン変換 ── */
+/* ── ルール行アイコン（データの emoji キーと同期） ── */
 function CategoryRuleIconRenderer({ emoji }: { emoji: string }) {
   const color = 'var(--pink-primary)'
+  const s = 28
 
   switch (emoji) {
     case '🚦':
-      return <TrafficLightIcon size={28} color={color} />
+      return <TrafficLightIcon size={s} color={color} />
+    case '⛔':
+      return <ProhibitIcon size={s} color={color} />
     case '📱':
-      return <SmartphoneIcon size={28} color={color} />
+      return <SmartphoneIcon size={s} color={color} />
     case '🍺':
-      return <BeerIcon size={28} color={color} />
+      return <BeerIcon size={s} color={color} />
+    case '⬅️':
+      return <ArrowLeftIcon size={s} color={color} />
+    case '🌙':
+      return <MoonIcon size={s} color={color} />
+    case '☂️':
+      return <UmbrellaIcon size={s} color={color} />
+    case '🎧':
+      return <HeadphoneIcon size={s} color={color} />
+    case '👥':
+      return <PeopleIcon size={s} color={color} />
+    case '👫':
+      return <CoupleIcon size={s} color={color} />
+    case '🚶':
+      return <PersonWalkIcon size={s} color={color} />
+    case '↔️':
+      return <SideSpaceIcon size={s} color={color} />
+    case '🏘️':
+      return <HouseIcon size={s} color={color} />
     case '🔦':
-      return <FlashlightIcon size={28} color={color} />
+      return <FlashlightIcon size={s} color={color} />
     case '🚲':
-      return <BicycleIcon size={28} color={color} />
+      return <BicycleIcon size={s} color={color} />
     case '🚗':
-      return <CarIcon size={28} color={color} />
+      return <CarIcon size={s} color={color} />
     default:
-      return <span>{emoji}</span>
+      return <AlertIcon size={s} color={color} />
   }
 }

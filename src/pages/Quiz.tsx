@@ -11,6 +11,8 @@ import {
   RefreshIcon,
   ClipboardIcon,
   CoinIcon,
+  XMarkIcon,
+  StarIcon,
 } from '../components/Icons'
 
 type Mode = 'select' | 'playing' | 'result'
@@ -325,13 +327,13 @@ export default function Quiz() {
             let bg = 'var(--bg-primary)'
             let border = 'rgba(232,132,154,.2)'
             let color = 'var(--label-primary)'
-            let icon = ['Ａ', 'Ｂ', 'Ｃ'][idx]
+            const letter = ['Ａ', 'Ｂ', 'Ｃ'][idx]
 
             if (answered) {
               if (isCorrect) {
-                bg = '#F0FFF4'; border = 'var(--ios-green)'; color = '#166534'; icon = '✅'
+                bg = '#F0FFF4'; border = 'var(--ios-green)'; color = '#166534'
               } else if (isSelected) {
-                bg = '#FFF5F5'; border = 'var(--ios-red)'; color = '#9F1239'; icon = '❌'
+                bg = '#FFF5F5'; border = 'var(--ios-red)'; color = '#9F1239'
               } else {
                 bg = 'var(--bg-grouped)'; border = 'transparent'
                 color = 'var(--label-tertiary)'
@@ -355,12 +357,18 @@ export default function Quiz() {
                   className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
                   style={{
                     background: answered && isCorrect ? 'var(--ios-green)'
-                               : answered && isSelected ? 'var(--ios-red)'
+                               : answered && isSelected && !isCorrect ? 'var(--ios-red)'
                                : 'var(--fill-pink)',
-                    color: answered && (isCorrect || isSelected) ? '#fff' : 'var(--pink-primary)',
+                    color: answered && (isCorrect || (isSelected && !isCorrect)) ? '#fff' : 'var(--pink-primary)',
                   }}
                 >
-                  {icon}
+                  {answered && isCorrect ? (
+                    <CheckmarkIcon size={16} color="#fff" />
+                  ) : answered && isSelected && !isCorrect ? (
+                    <XMarkIcon size={16} color="#fff" />
+                  ) : (
+                    letter
+                  )}
                 </span>
                 <span className="font-semibold text-[15px]" style={{ color }}>
                   {choice}
@@ -422,7 +430,9 @@ export default function Quiz() {
       {/* スター演出 */}
       {showStar && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
-          <span className="text-8xl animate-bounce-in">⭐</span>
+          <div className="animate-bounce-in">
+            <StarIcon size={96} color="var(--pink-primary)" />
+          </div>
         </div>
       )}
     </div>

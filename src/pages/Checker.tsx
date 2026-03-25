@@ -20,13 +20,14 @@ import {
   SnailIcon,
   HouseIcon,
   FlashlightIcon,
-  DocumentIcon,
+  PersonWalkIcon,
   LightningIcon,
   BicycleIcon,
   CoinIcon,
   ClockIcon,
   BookOpenIcon,
   BotIcon,
+  StarIcon,
 } from '../components/Icons'
 
 export default function Checker() {
@@ -415,10 +416,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
           </p>
           {item.isNew && (
             <span
-              className="inline-block mt-3 text-[10px] font-black px-2 py-1 rounded-full text-white"
+              className="inline-flex items-center gap-1 mt-3 text-[10px] font-black px-2 py-1 rounded-full text-white"
               style={{ background: 'var(--ios-red)' }}
             >
-              ★ 2026年4月改正対象
+              <StarIcon size={12} color="#fff" />
+              2026年4月改正対象
             </span>
           )}
         </div>
@@ -515,8 +517,8 @@ function EmojiIconRenderer({ emoji, size = 24 }: { emoji: string; size?: number 
     case '🔦':
       return <FlashlightIcon size={size} color={color} />
     case '🚶':
-      return <DocumentIcon size={size} color={color} />
+      return <PersonWalkIcon size={size} color={color} />
     default:
-      return <span>{emoji}</span>
+      return <AlertIcon size={size} color={color} />
   }
 }

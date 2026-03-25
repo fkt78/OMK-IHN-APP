@@ -461,3 +461,34 @@ export function TargetIcon({ size = 48, color = 'currentColor' }) {
     </svg>
   )
 }
+
+/** 歩行者・歩道など */
+export function PersonWalkIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="22" cy="11" r="4" />
+      <path d="M 22 15 L 22 28" />
+      <path d="M 22 18 L 14 22" />
+      <path d="M 22 18 L 30 22" />
+      <path d="M 16 38 L 20 28 L 24 28 L 28 38" />
+    </svg>
+  )
+}
+
+/** フィルター・ハイライト用の星（線画） */
+export function StarIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 24 6 L 27.5 18 L 40 18 L 30 26 L 33.5 38 L 24 30 L 14.5 38 L 18 26 L 8 18 L 20.5 18 Z" />
+    </svg>
+  )
+}
+
+/** 不正解マーク（クイズ選択肢など） */
+export function XMarkIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M 16 16 L 32 32 M 32 16 L 16 32" />
+    </svg>
+  )
+}
