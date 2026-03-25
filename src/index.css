@@ -1,15 +1,47 @@
 @import "tailwindcss";
 
+/* ── iMac Pink × Apple HIG カラーシステム ── */
+:root {
+  /* iMac Pink Palette */
+  --pink-primary:   #E8849A;
+  --pink-deep:      #C4506A;
+  --pink-light:     #FFD6E0;
+  --pink-xlight:    #FFF0F3;
+  --pink-surface:   #FFF8FA;
+
+  /* iOS System Colors */
+  --ios-green:      #34C759;
+  --ios-red:        #FF3B30;
+  --ios-orange:     #FF9500;
+  --ios-blue:       #007AFF;
+
+  /* Semantic */
+  --label-primary:   #1C1C1E;
+  --label-secondary: rgba(60,60,67,.6);
+  --label-tertiary:  rgba(60,60,67,.3);
+  --bg-primary:      #FFFFFF;
+  --bg-secondary:    #FFF0F3;
+  --bg-grouped:      #FFF0F3;
+  --separator:       rgba(232,132,154,.2);
+  --fill-pink:       rgba(232,132,154,.12);
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
 }
 
+html {
+  /* iOS SF Pro系フォント */
+  font-family: -apple-system, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+               'Yu Gothic', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
 body {
-  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
-  background-color: #f1f5f9;
-  overscroll-behavior: none;
+  background: var(--bg-grouped);
   margin: 0;
+  overscroll-behavior: none;
 }
 
 #root {
@@ -19,40 +51,40 @@ body {
   flex-direction: column;
 }
 
-@keyframes pop-in {
-  0% { transform: scale(0.85); opacity: 0; }
-  70% { transform: scale(1.04); }
-  100% { transform: scale(1); opacity: 1; }
+/* ── アニメーション ── */
+@keyframes ios-slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
-
-@keyframes slide-up {
-  from { transform: translateY(24px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes ios-pop {
+  0%   { transform: scale(.85); opacity: 0; }
+  65%  { transform: scale(1.04); }
+  100% { transform: scale(1);   opacity: 1; }
 }
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-10px); }
-  40% { transform: translateX(10px); }
-  60% { transform: translateX(-8px); }
-  80% { transform: translateX(8px); }
+@keyframes ios-shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-6px); }
+  80%      { transform: translateX(6px); }
 }
-
 @keyframes bounce-in {
-  0% { transform: scale(0); opacity: 0; }
-  60% { transform: scale(1.2); }
-  80% { transform: scale(0.95); }
-  100% { transform: scale(1); opacity: 1; }
+  0%   { transform: scale(0);    opacity: 0; }
+  60%  { transform: scale(1.25); }
+  80%  { transform: scale(.9);  }
+  100% { transform: scale(1);    opacity: 1; }
 }
 
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
-  70% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
-}
+.animate-slide-up  { animation: ios-slide-up .28s cubic-bezier(.25,.46,.45,.94) both; }
+.animate-pop       { animation: ios-pop      .35s cubic-bezier(.175,.885,.32,1.275) both; }
+.animate-shake     { animation: ios-shake    .45s ease-out; }
+.animate-bounce-in { animation: bounce-in    .45s cubic-bezier(.175,.885,.32,1.275) both; }
 
-.animate-pop-in { animation: pop-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.animate-slide-up { animation: slide-up 0.3s ease-out; }
-.animate-shake { animation: shake 0.5s ease-out; }
-.animate-bounce-in { animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.animate-pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
+/* ── iOS押下フィードバック ── */
+.ios-press {
+  transition: transform .12s ease, opacity .12s ease;
+}
+.ios-press:active {
+  transform: scale(.96);
+  opacity: .85;
+}

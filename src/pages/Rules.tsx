@@ -2,120 +2,174 @@ import { useState } from 'react'
 import { ruleItems, type RuleCategory, type AudienceType } from '../data/violations'
 
 const categoryLabels: Record<RuleCategory, string> = {
-  signal: '🚦 信号・一時停止',
-  smartphone: '📱 スマホ',
-  alcohol: '🍺 飲酒',
-  road: '🛣️ 道路通行',
+  signal:    '🚦 信号・一時停止',
+  smartphone:'📱 スマホ',
+  alcohol:   '🍺 飲酒',
+  road:      '🛣️ 道路通行',
   equipment: '🔦 装備',
-  others: '🚲 その他',
-  driver: '🚗 ドライバー向け',
+  others:    '🚲 その他',
+  driver:    '🚗 ドライバー向け',
 }
 
 export default function Rules() {
-  const [audience, setAudience] = useState<AudienceType>('cyclist')
-  const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [showNewOnly, setShowNewOnly] = useState(false)
+  const [audience, setAudience]   = useState<AudienceType>('cyclist')
+  const [expandedId, setExpanded] = useState<string | null>(null)
+  const [showNewOnly, setNewOnly] = useState(false)
 
   const filtered = ruleItems.filter(r => {
-    const audienceOk = r.audience === audience || r.audience === 'both'
+    const audOk = r.audience === audience || r.audience === 'both'
     const newOk = showNewOnly ? r.isNew : true
-    return audienceOk && newOk
+    return audOk && newOk
   })
-
   const categories = [...new Set(filtered.map(r => r.category))] as RuleCategory[]
 
   return (
-    <div className="pb-24 min-h-screen bg-slate-50">
+    <div className="min-h-screen pb-24" style={{ background: 'var(--bg-grouped)' }}>
       {/* ヘッダー */}
-      <div className="bg-gradient-to-br from-blue-800 to-blue-600 text-white px-4 pt-12 pb-6"
-        style={{ paddingTop: 'max(48px, env(safe-area-inset-top))' }}>
-        <h1 className="text-xl font-black text-center">📚 ルール一覧</h1>
-        <p className="text-blue-200 text-sm text-center mt-1">知らんかったじゃ済まへんルール集</p>
+      <div
+        className="px-4 pb-4"
+        style={{
+          background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+          paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
+        }}
+      >
+        <h1 className="font-black text-[28px] text-white mb-0.5">📚 ルール一覧</h1>
+        <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
+          知らんかったじゃ済まへんルール集
+        </p>
 
-        {/* タブ切替 */}
-        <div className="flex gap-2 mt-4">
-          <button
-            onClick={() => setAudience('cyclist')}
-            className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${
-              audience === 'cyclist' ? 'bg-white text-blue-700 shadow' : 'bg-blue-700 text-blue-200'
-            }`}
-          >
-            🚲 自転車乗り
-          </button>
-          <button
-            onClick={() => setAudience('driver')}
-            className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${
-              audience === 'driver' ? 'bg-white text-orange-700 shadow' : 'bg-blue-700 text-blue-200'
-            }`}
-          >
-            🚗 ドライバー
-          </button>
+        {/* セグメントコントロール */}
+        <div
+          className="flex gap-1 mt-4 rounded-xl p-1"
+          style={{ background: 'rgba(255,255,255,.2)' }}
+        >
+          {[
+            { key: 'cyclist' as AudienceType, label: '🚲 自転車乗り' },
+            { key: 'driver'  as AudienceType, label: '🚗 ドライバー' },
+          ].map(opt => (
+            <button
+              key={opt.key}
+              onClick={() => setAudience(opt.key)}
+              className="ios-press flex-1 py-2 rounded-lg text-sm font-bold transition-all"
+              style={{
+                background: audience === opt.key ? '#fff' : 'transparent',
+                color: audience === opt.key ? 'var(--pink-deep)' : 'rgba(255,255,255,.85)',
+                boxShadow: audience === opt.key ? '0 1px 4px rgba(0,0,0,.12)' : 'none',
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* フィルター */}
-      <div className="px-4 mt-4 flex items-center gap-3">
+      <div className="px-4 mt-4 flex items-center gap-3 max-w-md mx-auto">
         <button
-          onClick={() => setShowNewOnly(!showNewOnly)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold border-2 transition-all ${
-            showNewOnly
-              ? 'bg-red-500 text-white border-red-500'
-              : 'bg-white text-slate-500 border-slate-200'
-          }`}
+          onClick={() => setNewOnly(!showNewOnly)}
+          className="ios-press flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border"
+          style={{
+            background: showNewOnly ? 'var(--ios-red)' : 'var(--bg-primary)',
+            color: showNewOnly ? '#fff' : 'var(--label-secondary)',
+            borderColor: showNewOnly ? 'var(--ios-red)' : 'var(--separator)',
+          }}
         >
-          <span>★ 2026年改正のみ</span>
+          ★ 2026年改正のみ
         </button>
-        <span className="text-slate-400 text-xs">{filtered.length}件</span>
+        <span
+          className="text-xs font-medium"
+          style={{ color: 'var(--label-tertiary)' }}
+        >
+          {filtered.length}件
+        </span>
       </div>
 
       {/* ルール一覧 */}
-      <div className="px-4 mt-4 flex flex-col gap-6">
+      <div className="px-4 mt-4 max-w-md mx-auto flex flex-col gap-5">
         {categories.map(cat => {
           const catItems = filtered.filter(r => r.category === cat)
           if (!catItems.length) return null
           return (
             <div key={cat}>
-              <h2 className="text-slate-500 text-xs font-black mb-2 tracking-wider">
+              <p
+                className="text-[11px] font-semibold uppercase tracking-widest mb-2 px-1"
+                style={{ color: 'var(--label-secondary)' }}
+              >
                 {categoryLabels[cat]}
-              </h2>
-              <div className="flex flex-col gap-2">
-                {catItems.map(rule => (
+              </p>
+              <div
+                className="rounded-2xl overflow-hidden"
+                style={{ background: 'var(--bg-primary)' }}
+              >
+                {catItems.map((rule, ii) => (
                   <div
                     key={rule.id}
-                    className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"
+                    style={{
+                      borderBottom: ii < catItems.length - 1
+                        ? '0.5px solid var(--separator)' : 'none',
+                    }}
                   >
                     <button
-                      onClick={() => setExpandedId(expandedId === rule.id ? null : rule.id)}
-                      className="w-full p-4 text-left flex items-center gap-3"
+                      onClick={() => setExpanded(expandedId === rule.id ? null : rule.id)}
+                      className="ios-press w-full flex items-center gap-3 px-4 py-4 text-left"
                     >
                       <span className="text-2xl flex-shrink-0">{rule.emoji}</span>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-slate-800 text-sm">{rule.title}</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span
+                            className="font-semibold text-[15px]"
+                            style={{ color: 'var(--label-primary)' }}
+                          >
+                            {rule.title}
+                          </span>
                           {rule.isNew && (
-                            <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded font-bold">NEW</span>
+                            <span
+                              className="text-[10px] font-black px-1.5 py-0.5 rounded text-white"
+                              style={{ background: 'var(--ios-red)' }}
+                            >
+                              NEW
+                            </span>
                           )}
                         </div>
                         {rule.fine && (
-                          <span className="text-xs text-red-500 font-bold">💰 {rule.fine}</span>
+                          <span
+                            className="text-xs font-semibold"
+                            style={{ color: 'var(--ios-red)' }}
+                          >
+                            💰 {rule.fine}
+                          </span>
                         )}
                       </div>
-                      <span className="text-slate-300 text-lg flex-shrink-0 transition-transform"
-                        style={{ transform: expandedId === rule.id ? 'rotate(90deg)' : 'none' }}>
+                      <span
+                        className="flex-shrink-0 text-lg transition-transform duration-200"
+                        style={{
+                          color: 'var(--label-tertiary)',
+                          transform: expandedId === rule.id ? 'rotate(90deg)' : 'none',
+                        }}
+                      >
                         ›
                       </span>
                     </button>
 
                     {expandedId === rule.id && (
-                      <div className="px-4 pb-4 animate-slide-up">
-                        <div className="border-t border-slate-100 pt-3">
-                          <p className="text-slate-600 text-sm leading-relaxed">{rule.description}</p>
-                          {rule.penalty && (
-                            <p className="text-red-500 text-xs mt-2 font-medium">
-                              刑事罰：{rule.penalty}
-                            </p>
-                          )}
-                        </div>
+                      <div
+                        className="px-4 pb-4 animate-slide-up"
+                        style={{ borderTop: '0.5px solid var(--separator)' }}
+                      >
+                        <p
+                          className="text-sm leading-relaxed mt-3"
+                          style={{ color: 'var(--label-secondary)' }}
+                        >
+                          {rule.description}
+                        </p>
+                        {rule.penalty && (
+                          <p
+                            className="text-xs mt-2 font-medium"
+                            style={{ color: 'var(--ios-red)' }}
+                          >
+                            刑事罰：{rule.penalty}
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -126,13 +180,13 @@ export default function Rules() {
         })}
       </div>
 
-      {/* 免責 */}
-      <div className="px-4 mt-6">
-        <p className="text-slate-400 text-xs text-center leading-relaxed">
-          本情報は警察庁・警視庁の公開情報に基づきます。<br />
-          詳細は各都道府県警察にご確認ください。
-        </p>
-      </div>
+      <p
+        className="text-center text-xs mt-6 px-4 pb-2"
+        style={{ color: 'var(--label-tertiary)' }}
+      >
+        本情報は警察庁・警視庁の公開情報に基づきます。<br />
+        詳細は各都道府県警察にご確認ください。
+      </p>
     </div>
   )
 }

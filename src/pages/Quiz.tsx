@@ -1,26 +1,28 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { cyclistQuiz, driverQuiz, type QuizQuestion } from '../data/quiz'
 
 type Mode = 'select' | 'playing' | 'result'
 
 export default function Quiz() {
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const initialMode = searchParams.get('mode') as 'cyclist' | 'driver' | null
 
   const [audience, setAudience] = useState<'cyclist' | 'driver'>(initialMode || 'cyclist')
-  const [mode, setMode] = useState<Mode>(initialMode ? 'playing' : 'select')
+  const [mode, setMode]         = useState<Mode>(initialMode ? 'playing' : 'select')
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [currentIdx, setCurrentIdx] = useState(0)
-  const [selected, setSelected] = useState<number | null>(null)
-  const [answered, setAnswered] = useState(false)
-  const [score, setScore] = useState(0)
-  const [shakeKey, setShakeKey] = useState(0)
-  const [showPop, setShowPop] = useState(false)
+  const [selected, setSelected]     = useState<number | null>(null)
+  const [answered, setAnswered]     = useState(false)
+  const [score, setScore]           = useState(0)
+  const [shakeKey, setShakeKey]     = useState(0)
+  const [showStar, setShowStar]     = useState(false)
 
   useEffect(() => {
-    const q = audience === 'cyclist' ? [...cyclistQuiz] : [...driverQuiz]
-    setQuestions(q.sort(() => Math.random() - 0.5))
+    const q = (audience === 'cyclist' ? [...cyclistQuiz] : [...driverQuiz])
+      .sort(() => Math.random() - 0.5)
+    setQuestions(q)
   }, [audience])
 
   const startQuiz = (a: 'cyclist' | 'driver') => {
@@ -36,11 +38,10 @@ export default function Quiz() {
     if (answered) return
     setSelected(idx)
     setAnswered(true)
-    const q = questions[currentIdx]
-    if (idx === q.correctIndex) {
+    if (idx === questions[currentIdx].correctIndex) {
       setScore(s => s + 1)
-      setShowPop(true)
-      setTimeout(() => setShowPop(false), 800)
+      setShowStar(true)
+      setTimeout(() => setShowStar(false), 900)
     } else {
       setShakeKey(k => k + 1)
     }
@@ -64,89 +65,121 @@ export default function Quiz() {
     setScore(0)
   }
 
+  /* ── 選択画面 ── */
   if (mode === 'select') {
     return (
-      <div className="pb-24 min-h-screen bg-slate-50">
-        <div className="bg-gradient-to-br from-blue-800 to-blue-600 text-white px-4 pt-12 pb-8"
-          style={{ paddingTop: 'max(48px, env(safe-area-inset-top))' }}>
-          <h1 className="text-xl font-black text-center">🎯 違反判定クイズ</h1>
-          <p className="text-blue-200 text-sm text-center mt-1">あなたの常識、令和8年版でアップデート</p>
-        </div>
-
-        <div className="px-4 mt-6">
-          <p className="text-slate-600 text-sm text-center mb-5 font-medium">どちらのモードで挑戦しますか？</p>
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={() => startQuiz('cyclist')}
-              className="bg-white rounded-2xl shadow-sm p-6 text-left border-2 border-blue-100 active:scale-95 transition-transform"
-            >
-              <div className="text-4xl mb-3">🚲</div>
-              <h2 className="font-black text-blue-800 text-lg">自転車乗り編</h2>
-              <p className="text-slate-500 text-sm mt-1">
-                あなたの通勤ルーティン、どれだけ違反してる？<br />
-                <span className="text-red-500 font-bold">{cyclistQuiz.length}問</span>のリアルシナリオで確認。
-              </p>
-              <div className="mt-3 inline-block bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">
-                対象：自転車通勤者・学生・主婦
-              </div>
-            </button>
-
-            <button
-              onClick={() => startQuiz('driver')}
-              className="bg-white rounded-2xl shadow-sm p-6 text-left border-2 border-orange-100 active:scale-95 transition-transform"
-            >
-              <div className="text-4xl mb-3">🚗</div>
-              <h2 className="font-black text-orange-800 text-lg">ドライバー編</h2>
-              <p className="text-slate-500 text-sm mt-1">
-                2026年4月から、ドライバーの義務も変わった。<br />
-                <span className="text-red-500 font-bold">{driverQuiz.length}問</span>の新ルール確認テスト。
-              </p>
-              <div className="mt-3 inline-block bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full">
-                対象：社用車運転者・一般ドライバー
-              </div>
-            </button>
+      <div className="min-h-screen pb-24" style={{ background: 'var(--bg-grouped)' }}>
+        <NavHeader title="違反判定クイズ" onBack={() => navigate('/')} />
+        <div className="px-4 mt-2 max-w-md mx-auto">
+          <p className="text-sm text-center mb-5" style={{ color: 'var(--label-secondary)' }}>
+            どちらのモードで挑戦しますか？
+          </p>
+          <div className="flex flex-col gap-3">
+            {[
+              {
+                a: 'cyclist' as const,
+                emoji: '🚲',
+                title: '自転車乗り編',
+                sub: `あなたの通勤ルーティン、どれだけ違反してる？`,
+                count: cyclistQuiz.length,
+                tag: '対象：自転車通勤者・学生・主婦',
+                bg: 'var(--fill-pink)', border: 'var(--pink-light)',
+              },
+              {
+                a: 'driver' as const,
+                emoji: '🚗',
+                title: 'ドライバー編',
+                sub: '2026年4月から、ドライバーの義務も変わった。',
+                count: driverQuiz.length,
+                tag: '対象：社用車運転者・一般ドライバー',
+                bg: '#FFF5E6', border: '#FFDDAA',
+              },
+            ].map(opt => (
+              <button
+                key={opt.a}
+                onClick={() => startQuiz(opt.a)}
+                className="ios-press rounded-2xl p-5 text-left"
+                style={{
+                  background: opt.bg,
+                  border: `1.5px solid ${opt.border}`,
+                }}
+              >
+                <div className="text-4xl mb-3">{opt.emoji}</div>
+                <h2
+                  className="font-black text-[18px] mb-1"
+                  style={{ color: 'var(--label-primary)' }}
+                >
+                  {opt.title}
+                </h2>
+                <p className="text-sm mb-3" style={{ color: 'var(--label-secondary)' }}>
+                  {opt.sub}{' '}
+                  <span style={{ color: 'var(--ios-red)', fontWeight: 700 }}>
+                    {opt.count}問
+                  </span>
+                  のリアルシナリオで確認。
+                </p>
+                <span
+                  className="inline-block text-xs font-semibold px-3 py-1 rounded-full"
+                  style={{ background: 'rgba(232,132,154,.15)', color: 'var(--pink-deep)' }}
+                >
+                  {opt.tag}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
     )
   }
 
+  /* ── 結果画面 ── */
   if (mode === 'result') {
     const total = questions.length
-    const pct = Math.round((score / total) * 100)
-    const getEmoji = () => {
-      if (pct === 100) return '🏆'
-      if (pct >= 80) return '🎉'
-      if (pct >= 60) return '😅'
-      return '🚨'
-    }
-    const getMessage = () => {
-      if (pct === 100) return '完璧や！青切符の心配ゼロ！'
-      if (pct >= 80) return 'なかなかやるやん。あとちょっと！'
-      if (pct >= 60) return '惜しい…でもまだ危ない。'
-      return '危険！今すぐルールを確認して！'
-    }
+    const pct   = Math.round((score / total) * 100)
+    const [emoji, msg] =
+      pct === 100 ? ['🏆', '完璧や！青切符の心配ゼロ！'] :
+      pct >= 80   ? ['🎉', 'なかなかやるやん。あとちょっと！'] :
+      pct >= 60   ? ['😅', '惜しい…でもまだ危ない。'] :
+                   ['🚨', '危険！今すぐルールを確認して！']
 
     return (
-      <div className="pb-24 min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4">
-        <div className="bg-white rounded-3xl shadow-lg p-8 w-full text-center animate-pop-in">
-          <div className="text-6xl mb-4">{getEmoji()}</div>
-          <h2 className="text-2xl font-black text-slate-800 mb-1">
-            {total}問中 <span className="text-blue-600">{score}問</span> 正解！
+      <div
+        className="min-h-screen pb-24 flex flex-col items-center justify-center px-4"
+        style={{ background: 'var(--bg-grouped)' }}
+      >
+        <div
+          className="w-full max-w-sm rounded-3xl p-7 text-center animate-pop"
+          style={{ background: 'var(--bg-primary)', boxShadow: '0 8px 32px rgba(196,80,106,.18)' }}
+        >
+          <div className="text-6xl mb-4">{emoji}</div>
+          <h2 className="text-2xl font-black mb-1" style={{ color: 'var(--label-primary)' }}>
+            {total}問中{' '}
+            <span style={{ color: 'var(--pink-primary)' }}>{score}問</span> 正解！
           </h2>
-          <p className="text-slate-500 text-sm mb-4">正答率 {pct}%</p>
+          <p className="text-sm mb-5" style={{ color: 'var(--label-secondary)' }}>
+            正答率 {pct}%
+          </p>
 
-          <div className="bg-slate-100 rounded-2xl p-4 mb-5">
-            <p className="font-bold text-slate-700">{getMessage()}</p>
+          <div
+            className="rounded-2xl p-4 mb-4"
+            style={{ background: 'var(--fill-pink)' }}
+          >
+            <p className="font-bold text-[15px]" style={{ color: 'var(--label-primary)' }}>
+              {msg}
+            </p>
           </div>
 
           {pct < 100 && (
-            <div className="bg-red-50 border border-red-100 rounded-xl p-4 mb-5 text-left">
-              <p className="text-red-700 text-sm font-bold mb-1">⚠️ Claudeからのコメント</p>
-              <p className="text-red-600 text-xs leading-relaxed">
+            <div
+              className="rounded-2xl p-4 mb-5 text-left"
+              style={{ background: '#FFF5F5', border: '1px solid #FFDDDD' }}
+            >
+              <p className="font-bold text-sm mb-1" style={{ color: 'var(--ios-red)' }}>
+                ⚠️ Claudeより
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: '#C0404A' }}>
                 統計的に見れば、{100 - pct}%の誤答率は改善の余地があります。
-                デカルトも「我思う、ゆえに我あり」と言いましたが、
-                あなたの場合「我知らず、ゆえに我違反す」にならないよう注意を。
+                デカルトも「我思う、ゆえに我あり」と言いましたが、あなたの場合「我知らず、ゆえに我違反す」にならないよう注意を。
               </p>
             </div>
           )}
@@ -154,13 +187,15 @@ export default function Quiz() {
           <div className="flex flex-col gap-3">
             <button
               onClick={handleRestart}
-              className="w-full bg-blue-700 text-white font-black py-4 rounded-xl active:scale-95 transition-transform"
+              className="ios-press w-full py-4 rounded-2xl font-black text-white"
+              style={{ background: 'linear-gradient(135deg,var(--pink-primary),var(--pink-deep))' }}
             >
               もう一度挑戦 🔄
             </button>
             <button
               onClick={() => startQuiz(audience === 'cyclist' ? 'driver' : 'cyclist')}
-              className="w-full bg-slate-100 text-slate-700 font-bold py-4 rounded-xl active:scale-95 transition-transform"
+              className="ios-press w-full py-4 rounded-2xl font-bold"
+              style={{ background: 'var(--fill-pink)', color: 'var(--pink-deep)' }}
             >
               {audience === 'cyclist' ? '🚗 ドライバー編に挑戦' : '🚲 自転車乗り編に挑戦'}
             </button>
@@ -170,80 +205,134 @@ export default function Quiz() {
     )
   }
 
+  /* ── 問題画面 ── */
   if (!questions.length) return null
-  const q = questions[currentIdx]
-  const progress = ((currentIdx + 1) / questions.length) * 100
+  const q        = questions[currentIdx]
+  const progress = (currentIdx + 1) / questions.length
 
   return (
-    <div className="pb-24 min-h-screen bg-slate-50">
-      {/* ヘッダー */}
-      <div className="bg-gradient-to-br from-blue-800 to-blue-600 text-white px-4 pt-12 pb-6"
-        style={{ paddingTop: 'max(48px, env(safe-area-inset-top))' }}>
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-xs text-blue-200">
+    <div className="min-h-screen pb-24" style={{ background: 'var(--bg-grouped)' }}>
+      {/* プログレスバー付きヘッダー */}
+      <div
+        className="px-4 pb-4"
+        style={{
+          background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+          paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
+        }}
+      >
+        <div className="flex justify-between items-center mb-2 max-w-md mx-auto">
+          <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,.8)' }}>
             {audience === 'cyclist' ? '🚲 自転車乗り編' : '🚗 ドライバー編'}
           </span>
-          <span className="text-xs text-blue-200 font-bold">
-            {currentIdx + 1} / {questions.length}問
-          </span>
+          <div className="flex items-center gap-2">
+            {q.isNew && (
+              <span
+                className="text-[10px] font-black px-2 py-0.5 rounded-full text-white"
+                style={{ background: 'rgba(255,59,48,.9)' }}
+              >
+                NEW
+              </span>
+            )}
+            <span className="text-xs font-bold" style={{ color: 'rgba(255,255,255,.8)' }}>
+              {currentIdx + 1} / {questions.length}
+            </span>
+          </div>
         </div>
-        <div className="h-2 bg-blue-900 rounded-full overflow-hidden">
+
+        {/* プログレスバー */}
+        <div
+          className="h-1.5 rounded-full max-w-md mx-auto overflow-hidden"
+          style={{ background: 'rgba(255,255,255,.3)' }}
+        >
           <div
-            className="h-full bg-blue-300 rounded-full transition-all duration-500"
-            style={{ width: `${progress}%` }}
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${progress * 100}%`, background: '#fff' }}
           />
         </div>
-        <div className="flex justify-between mt-2">
-          <span className="text-xs text-blue-300">正解: {score}問</span>
-          {q.isNew && (
-            <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full font-bold">NEW 2026年改正</span>
-          )}
+        <div className="flex justify-end mt-1.5 max-w-md mx-auto">
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,.7)' }}>
+            正解: {score}問
+          </span>
         </div>
       </div>
 
-      {/* 問題 */}
-      <div className="px-4 mt-4">
-        <div className="bg-white rounded-2xl shadow-sm p-5 mb-4 animate-slide-up">
-          <p className="text-xs text-slate-400 font-bold mb-2">📋 シナリオ</p>
-          <p className="text-slate-600 text-sm leading-relaxed bg-slate-50 rounded-xl p-3">{q.scenario}</p>
-          <p className="font-black text-slate-800 text-base mt-4">{q.question}</p>
+      <div className="px-4 mt-4 max-w-md mx-auto">
+        {/* シナリオ */}
+        <div
+          className="rounded-2xl p-4 mb-4 animate-slide-up"
+          style={{ background: 'var(--bg-primary)' }}
+        >
+          <p
+            className="text-[11px] font-semibold mb-2 uppercase tracking-wide"
+            style={{ color: 'var(--pink-primary)' }}
+          >
+            📋 シナリオ
+          </p>
+          <p
+            className="text-sm leading-relaxed rounded-xl px-3 py-2.5"
+            style={{ background: 'var(--fill-pink)', color: 'var(--label-secondary)' }}
+          >
+            {q.scenario}
+          </p>
+          <p
+            className="font-black text-[17px] mt-4 leading-snug"
+            style={{ color: 'var(--label-primary)' }}
+          >
+            {q.question}
+          </p>
         </div>
 
         {/* 選択肢 */}
         <div
           key={shakeKey}
-          className={`flex flex-col gap-3 ${shakeKey > 0 && answered ? 'animate-shake' : ''}`}
+          className={`flex flex-col gap-2.5 ${shakeKey > 0 && answered ? 'animate-shake' : ''}`}
         >
           {q.choices.map((choice, idx) => {
-            let style = 'bg-white border-2 border-slate-200 text-slate-700'
+            const isCorrect = idx === q.correctIndex
+            const isSelected = idx === selected
+            let bg = 'var(--bg-primary)'
+            let border = 'rgba(232,132,154,.2)'
+            let color = 'var(--label-primary)'
+            let icon = ['Ａ', 'Ｂ', 'Ｃ'][idx]
+
             if (answered) {
-              if (idx === q.correctIndex) {
-                style = 'bg-green-50 border-2 border-green-500 text-green-800'
-              } else if (idx === selected && idx !== q.correctIndex) {
-                style = 'bg-red-50 border-2 border-red-400 text-red-700'
+              if (isCorrect) {
+                bg = '#F0FFF4'; border = 'var(--ios-green)'; color = '#166534'; icon = '✅'
+              } else if (isSelected) {
+                bg = '#FFF5F5'; border = 'var(--ios-red)'; color = '#9F1239'; icon = '❌'
               } else {
-                style = 'bg-white border-2 border-slate-100 text-slate-400'
+                bg = 'var(--bg-grouped)'; border = 'transparent'
+                color = 'var(--label-tertiary)'
               }
-            } else if (selected === idx) {
-              style = 'bg-blue-50 border-2 border-blue-400 text-blue-800'
+            } else if (isSelected) {
+              bg = 'var(--fill-pink)'; border = 'var(--pink-primary)'
             }
 
             return (
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}
-                className={`w-full text-left rounded-xl p-4 font-bold text-sm transition-all active:scale-95 ${style}`}
+                className="ios-press w-full text-left rounded-2xl px-4 py-4 flex items-center gap-3"
+                style={{
+                  background: bg,
+                  border: `1.5px solid ${border}`,
+                  transition: 'all .15s ease',
+                }}
               >
-                <span className="mr-2 text-base">
-                  {answered
-                    ? idx === q.correctIndex
-                      ? '✅'
-                      : idx === selected
-                      ? '❌'
-                      : '　'
-                    : ['🅐', '🅑', '🅒'][idx]}
+                <span
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
+                  style={{
+                    background: answered && isCorrect ? 'var(--ios-green)'
+                               : answered && isSelected ? 'var(--ios-red)'
+                               : 'var(--fill-pink)',
+                    color: answered && (isCorrect || isSelected) ? '#fff' : 'var(--pink-primary)',
+                  }}
+                >
+                  {icon}
                 </span>
-                {choice}
+                <span className="font-semibold text-[15px]" style={{ color }}>
+                  {choice}
+                </span>
               </button>
             )
           })}
@@ -252,21 +341,42 @@ export default function Quiz() {
         {/* 解説 */}
         {answered && (
           <div className="mt-4 animate-slide-up">
-            <div className={`rounded-2xl p-4 ${selected === q.correctIndex ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-              <p className={`font-black text-sm mb-2 ${selected === q.correctIndex ? 'text-green-700' : 'text-red-700'}`}>
+            <div
+              className="rounded-2xl p-4 mb-4"
+              style={{
+                background: selected === q.correctIndex ? '#F0FFF4' : '#FFF5F5',
+                border: `1px solid ${selected === q.correctIndex ? '#BBF7D0' : '#FECDD3'}`,
+              }}
+            >
+              <p
+                className="font-black text-[15px] mb-2"
+                style={{ color: selected === q.correctIndex ? '#166534' : '#9F1239' }}
+              >
                 {selected === q.correctIndex ? '🎉 正解！' : '💦 不正解…'}
               </p>
-              <p className="text-slate-700 text-sm leading-relaxed">{q.explanation}</p>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: 'var(--label-primary)' }}
+              >
+                {q.explanation}
+              </p>
               {q.fine && (
-                <div className="mt-3 inline-flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">
-                  💰 反則金: {q.fine}
-                </div>
+                <span
+                  className="inline-block mt-3 text-xs font-bold px-3 py-1 rounded-full text-white"
+                  style={{ background: 'var(--ios-red)' }}
+                >
+                  💰 反則金：{q.fine}
+                </span>
               )}
             </div>
 
             <button
               onClick={handleNext}
-              className="w-full mt-4 bg-blue-700 text-white font-black py-4 rounded-xl active:scale-95 transition-transform"
+              className="ios-press w-full py-4 rounded-2xl font-black text-white text-[15px]"
+              style={{
+                background: 'linear-gradient(135deg,var(--pink-primary),var(--pink-deep))',
+                boxShadow: '0 4px 16px rgba(232,132,154,.35)',
+              }}
             >
               {currentIdx < questions.length - 1 ? '次の問題 →' : '結果を見る 🏁'}
             </button>
@@ -274,12 +384,35 @@ export default function Quiz() {
         )}
       </div>
 
-      {/* ポップエフェクト */}
-      {showPop && (
+      {/* スター演出 */}
+      {showStar && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
-          <div className="text-8xl animate-bounce-in">⭐</div>
+          <span className="text-8xl animate-bounce-in">⭐</span>
         </div>
       )}
+    </div>
+  )
+}
+
+/* 共通ナビヘッダー */
+function NavHeader({ title, onBack }: { title: string; onBack?: () => void }) {
+  return (
+    <div
+      className="flex items-center px-4 py-3"
+      style={{
+        background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+        paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
+      }}
+    >
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="ios-press mr-3 text-white font-semibold text-sm"
+        >
+          ‹ 戻る
+        </button>
+      )}
+      <h1 className="font-black text-[20px] text-white">{title}</h1>
     </div>
   )
 }
