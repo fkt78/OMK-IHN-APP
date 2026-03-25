@@ -8,7 +8,7 @@
  * - Major: 大規模な変更・非互換な変更（例：1.0.0 → 2.0.0）
  */
 
-export const APP_VERSION = '1.0.0'
+export const APP_VERSION = '1.1.0'
 export const APP_NAME = 'それ、青切符やで！'
 export const APP_SUBTITLE = '自転車違反チェッカー 2026'
 export const APP_BUILD_DATE = new Date().toISOString().split('T')[0]
