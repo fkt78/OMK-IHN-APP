@@ -162,13 +162,9 @@ export default function Home() {
           className="text-center text-xs mt-5 pb-2"
           style={{ color: 'var(--label-tertiary)' }}
         >
-          有限会社 吹田総業 AI事業部 × Claude
+          {version.displayText} © 有限会社 吹田総業 AI事業部 × Claude
           <br />
           情報は警察庁・警視庁の公開情報に基づきます
-          <br />
-          <span style={{ fontSize: '10px', marginTop: '4px', display: 'block' }}>
-            {version.displayText}
-          </span>
         </p>
       </div>
     </div>
