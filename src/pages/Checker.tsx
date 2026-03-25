@@ -136,8 +136,48 @@ function ResultDot({ result }: { result: CheckerItem['result'] }) {
 
 /* ── 判定結果 ── */
 function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void }) {
+  const [hourlyRate, setHourlyRate] = useState<string>('')
+  const [showCostBreakdown, setShowCostBreakdown] = useState(false)
+
   const isViolation   = item.result === 'violation'
   const isSafe        = item.result === 'safe'
+
+  // 金額抽出関数
+  const extractAmount = (fineText: string): number | null => {
+    const match = fineText.match(/(\d+,?\d*)/);
+    if (!match) return null
+    return parseInt(match[1].replace(/,/g, ''), 10)
+  }
+
+  // 労働時間計算
+  const calculateLaborHours = (): number | null => {
+    if (!hourlyRate || !item.fineText) return null
+    const rate = parseInt(hourlyRate, 10)
+    if (isNaN(rate) || rate <= 0) return null
+    const amount = extractAmount(item.fineText)
+    if (!amount) return null
+    return Math.ceil(amount / rate)
+  }
+
+  // 機会損失の計算
+  const opportunities = [
+    { name: '牛丼', price: 450, unit: '杯' },
+    { name: 'Netflix', price: 1500, unit: 'ヶ月' },
+    { name: 'コーヒー', price: 150, unit: '杯' },
+    { name: 'プレミアム映画', price: 2000, unit: '本' },
+  ]
+
+  const calculateCostBreakdown = () => {
+    const hours = calculateLaborHours()
+    if (!hours) return null
+    const hourlyRateNum = parseInt(hourlyRate, 10)
+    const totalCost = hours * hourlyRateNum
+
+    return opportunities.map(opp => ({
+      ...opp,
+      count: (totalCost / opp.price).toFixed(1),
+    }))
+  }
 
   const gradients = {
     violation:   'linear-gradient(160deg,#FF6B6B,#FF3B30)',
@@ -226,6 +266,99 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
           </div>
         )}
 
+        {/* 時間コスト計算 */}
+        {isViolation && item.fineText && (
+          <div
+            className="rounded-2xl p-4 mb-3 animate-slide-up"
+            style={{ background: '#FFF5F5', border: '1px solid #FECDD3' }}
+          >
+            <p
+              className="text-[11px] font-semibold mb-3"
+              style={{ color: 'var(--ios-red)' }}
+            >
+              ⏰ あなたの労働時間コスト
+            </p>
+
+            {!showCostBreakdown ? (
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <input
+                    type="number"
+                    value={hourlyRate}
+                    onChange={(e) => setHourlyRate(e.target.value)}
+                    placeholder="1200"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    style={{ borderColor: '#FECDD3' }}
+                  />
+                  <span style={{ color: 'var(--label-secondary)', fontSize: '14px' }}>円/時間</span>
+                </div>
+                <p style={{ color: 'var(--label-secondary)', fontSize: '12px', marginBottom: '10px' }}>
+                  あなたの想定時給を入力してください
+                </p>
+                <button
+                  onClick={() => {
+                    if (hourlyRate && parseInt(hourlyRate, 10) > 0) {
+                      setShowCostBreakdown(true)
+                    }
+                  }}
+                  className="ios-press w-full py-2 rounded-lg font-semibold text-white text-sm"
+                  style={{ background: 'var(--ios-red)' }}
+                >
+                  計算する
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="mb-4 p-3 rounded-lg" style={{ background: 'rgba(255,59,48,.05)' }}>
+                  <p style={{ color: 'var(--label-secondary)', fontSize: '12px', marginBottom: '8px' }}>
+                    → 結果：
+                  </p>
+                  <p
+                    className="text-4xl font-black leading-tight"
+                    style={{ color: 'var(--ios-red)' }}
+                  >
+                    あなたがこの違反で<br />失うのは『{calculateLaborHours()}時間分』<br />の労働です。
+                  </p>
+                </div>
+
+                <p style={{ color: 'var(--label-secondary)', fontSize: '12px', marginBottom: '10px' }}>
+                  あなたの機会損失：
+                </p>
+                <div style={{ marginBottom: '15px' }}>
+                  {calculateCostBreakdown()?.map((opp, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        fontSize: '13px',
+                        padding: '8px 0',
+                        borderBottom: idx < opportunities.length - 1 ? '0.5px solid #FECDD3' : 'none',
+                        color: 'var(--label-primary)',
+                      }}
+                    >
+                      • <span style={{ fontWeight: '600' }}>{opp.name}</span>
+                      <span style={{ color: 'var(--label-secondary)' }}>（{opp.price}円）</span>
+                      <span style={{ fontWeight: '700', color: 'var(--ios-red)' }}>
+                        → {opp.count}{opp.unit}分
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => {
+                    setShowCostBreakdown(false)
+                    setHourlyRate('')
+                  }}
+                  className="ios-press w-full py-2 rounded-lg font-semibold text-sm"
+                  style={{ background: 'rgba(232,132,154,.1)', color: 'var(--pink-primary)' }}
+                >
+                  別の時給で計算
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* 条件 */}
         {item.result === 'conditional' && item.condition && (
           <div
@@ -308,7 +441,11 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
         </div>
 
         <button
-          onClick={onBack}
+          onClick={() => {
+            setHourlyRate('')
+            setShowCostBreakdown(false)
+            onBack()
+          }}
           className="ios-press w-full py-4 rounded-2xl font-black text-white text-[15px]"
           style={{
             background: 'linear-gradient(135deg,var(--pink-primary),var(--pink-deep))',
