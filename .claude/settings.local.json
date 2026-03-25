@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(git commit -m \"feat: v1.0.0 - Add semantic versioning system:*)",
-      "Bash(kill 92266)"
+      "Bash(kill 92266)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)"
     ]
   }
 }

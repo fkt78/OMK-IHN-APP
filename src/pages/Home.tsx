@@ -1,6 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import { reforms } from '../data/reforms'
-import { BicycleIcon, CarIcon, AlertIcon } from '../components/Icons'
+import {
+  BicycleIcon,
+  CarIcon,
+  AlertIcon,
+  SmartphoneIcon,
+  SideSpaceIcon,
+  BeerIcon,
+  SnailIcon,
+  DocumentIcon
+} from '../components/Icons'
 import { version } from '../version'
 
 export default function Home() {
@@ -193,6 +202,27 @@ function SectionHeader({ label, badge }: { label: string; badge?: string }) {
   )
 }
 
+function ReformIconRenderer({ emoji }: { emoji: string }) {
+  const iconProps = { size: 32, color: 'var(--pink-primary)' }
+
+  switch (emoji) {
+    case '🚨':
+      return <AlertIcon {...iconProps} />
+    case '📱':
+      return <SmartphoneIcon {...iconProps} />
+    case '↔️':
+      return <SideSpaceIcon {...iconProps} />
+    case '🍺':
+      return <BeerIcon {...iconProps} />
+    case '🐢':
+      return <SnailIcon {...iconProps} />
+    case '📚':
+      return <DocumentIcon {...iconProps} />
+    default:
+      return <span>{emoji}</span>
+  }
+}
+
 function ReformCard({ reform }: { reform: (typeof reforms)[0] }) {
   return (
     <div
@@ -200,7 +230,9 @@ function ReformCard({ reform }: { reform: (typeof reforms)[0] }) {
       style={{ background: 'var(--bg-primary)' }}
     >
       <div className="flex items-start gap-3 px-4 pt-4 pb-3">
-        <span className="text-2xl flex-shrink-0 mt-0.5">{reform.emoji}</span>
+        <div className="text-2xl flex-shrink-0 mt-0.5">
+          <ReformIconRenderer emoji={reform.emoji} />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <h3

@@ -1,6 +1,27 @@
 import { useState } from 'react'
 import { checkerItems, type CheckerItem, type AudienceType } from '../data/violations'
-import { CheckmarkIcon, AlertIcon } from '../components/Icons'
+import {
+  CheckmarkIcon,
+  AlertIcon,
+  SmartphoneIcon,
+  StopSignIcon,
+  TrafficLightIcon,
+  ProhibitIcon,
+  ArrowLeftIcon,
+  MoonIcon,
+  UmbrellaIcon,
+  HeadphoneIcon,
+  PeopleIcon,
+  CoupleIcon,
+  BeerIcon,
+  RefreshIcon,
+  BasketIcon,
+  CarIcon,
+  SnailIcon,
+  HouseIcon,
+  FlashlightIcon,
+  DocumentIcon
+} from '../components/Icons'
 
 export default function Checker() {
   const [audience, setAudience] = useState<AudienceType>('cyclist')
@@ -73,7 +94,9 @@ export default function Checker() {
                   ? '0.5px solid var(--separator)' : 'none',
               }}
             >
-              <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+              <div className="text-2xl flex-shrink-0">
+                <EmojiIconRenderer emoji={item.emoji} />
+              </div>
               <span
                 className="flex-1 text-[15px] font-medium"
                 style={{ color: 'var(--label-primary)' }}
@@ -165,7 +188,9 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
             確認した行為
           </p>
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{item.emoji}</span>
+            <div className="text-3xl">
+              <EmojiIconRenderer emoji={item.emoji} size={32} />
+            </div>
             <p
               className="font-semibold text-[15px]"
               style={{ color: 'var(--label-primary)' }}
@@ -295,4 +320,50 @@ function ResultView({ item, onBack }: { item: CheckerItem; onBack: () => void })
       </div>
     </div>
   )
+}
+
+/* ── 絵文字→アイコン変換ヘルパー ── */
+function EmojiIconRenderer({ emoji, size = 24 }: { emoji: string; size?: number }) {
+  const color = 'var(--pink-primary)'
+
+  switch (emoji) {
+    case '📱':
+      return <SmartphoneIcon size={size} color={color} />
+    case '🛑':
+      return <StopSignIcon size={size} color={color} />
+    case '🚦':
+      return <TrafficLightIcon size={size} color={color} />
+    case '⛔':
+      return <ProhibitIcon size={size} color={color} />
+    case '⬅️':
+      return <ArrowLeftIcon size={size} color={color} />
+    case '🌙':
+      return <MoonIcon size={size} color={color} />
+    case '🍺':
+      return <BeerIcon size={size} color={color} />
+    case '☂️':
+      return <UmbrellaIcon size={size} color={color} />
+    case '🎧':
+      return <HeadphoneIcon size={size} color={color} />
+    case '👥':
+      return <PeopleIcon size={size} color={color} />
+    case '👫':
+      return <CoupleIcon size={size} color={color} />
+    case '🚗':
+      return <CarIcon size={size} color={color} />
+    case '🔄':
+      return <RefreshIcon size={size} color={color} />
+    case '🧺':
+      return <BasketIcon size={size} color={color} />
+    case '🐌':
+      return <SnailIcon size={size} color={color} />
+    case '🏘️':
+      return <HouseIcon size={size} color={color} />
+    case '🔦':
+      return <FlashlightIcon size={size} color={color} />
+    case '🚶':
+      return <DocumentIcon size={size} color={color} />
+    default:
+      return <span>{emoji}</span>
+  }
 }

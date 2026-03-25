@@ -172,3 +172,194 @@ export function NavFinesIcon({ size = 24, isActive = false }) {
     </svg>
   )
 }
+
+/* ── 改正・違反アイコンセット ── */
+
+export function ProhibitIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 円 */}
+      <circle cx="24" cy="24" r="18" />
+      {/* 斜め線 */}
+      <line x1="10" y1="10" x2="38" y2="38" strokeWidth="2" />
+    </svg>
+  )
+}
+
+export function StopSignIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 八角形 */}
+      <path d="M 14 8 L 34 8 L 40 14 L 40 34 L 34 40 L 14 40 L 8 34 L 8 14 Z" />
+    </svg>
+  )
+}
+
+export function ArrowLeftIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 矢印 */}
+      <line x1="32" y1="24" x2="10" y2="24" strokeWidth="2" />
+      <path d="M 16 18 L 10 24 L 16 30" />
+    </svg>
+  )
+}
+
+export function MoonIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 月 */}
+      <path d="M 12 24 Q 12 14 24 14 Q 34 14 34 24 Q 34 34 24 34 Q 20 34 16 30" />
+    </svg>
+  )
+}
+
+export function UmbrellaIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 傘 */}
+      <path d="M 24 8 Q 12 8 8 16 Q 8 16 24 16 Q 40 16 40 16 Q 36 8 24 8" />
+      <line x1="24" y1="16" x2="24" y2="36" strokeWidth="2" />
+      <circle cx="24" cy="38" r="2" fill={color} />
+    </svg>
+  )
+}
+
+export function HeadphoneIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* ヘッドフォン */}
+      <path d="M 10 24 Q 10 14 24 14 Q 38 14 38 24" />
+      <rect x="8" y="24" width="6" height="12" rx="2" />
+      <rect x="34" y="24" width="6" height="12" rx="2" />
+    </svg>
+  )
+}
+
+export function PeopleIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 左の人 */}
+      <circle cx="16" cy="12" r="4" />
+      <path d="M 16 18 L 16 28 M 12 22 L 20 22" />
+      {/* 右の人 */}
+      <circle cx="32" cy="12" r="4" />
+      <path d="M 32 18 L 32 28 M 28 22 L 36 22" />
+    </svg>
+  )
+}
+
+export function CoupleIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 左の人 */}
+      <circle cx="14" cy="11" r="3" />
+      <path d="M 14 16 L 14 24 M 11 19 L 17 19" />
+      {/* 右の人 */}
+      <circle cx="26" cy="11" r="3" />
+      <path d="M 26 16 L 26 24 M 23 19 L 29 19" />
+      {/* 手つなぎ */}
+      <line x1="17" y1="19" x2="23" y2="19" strokeWidth="2" />
+    </svg>
+  )
+}
+
+export function BeerIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* グラス */}
+      <path d="M 14 10 L 16 30 Q 16 36 20 38 L 28 38 Q 32 36 32 30 L 34 10" />
+      <line x1="14" y1="10" x2="34" y2="10" strokeWidth="2" />
+      {/* 泡 */}
+      <circle cx="20" cy="8" r="1.5" fill={color} />
+      <circle cx="24" cy="7" r="1.5" fill={color} />
+      <circle cx="28" cy="8" r="1.5" fill={color} />
+    </svg>
+  )
+}
+
+export function RefreshIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 矢印 */}
+      <path d="M 12 24 Q 12 16 20 14 Q 28 12 32 18" />
+      <path d="M 32 18 L 30 10 L 38 12" />
+    </svg>
+  )
+}
+
+export function BasketIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* かご */}
+      <path d="M 10 14 L 14 38 Q 14 40 16 40 L 32 40 Q 34 40 34 38 L 38 14" />
+      <line x1="8" y1="14" x2="40" y2="14" strokeWidth="2" />
+      <line x1="16" y1="14" x2="16" y2="40" />
+      <line x1="24" y1="14" x2="24" y2="40" />
+      <line x1="32" y1="14" x2="32" y2="40" />
+    </svg>
+  )
+}
+
+export function SnailIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 殻 */}
+      <circle cx="28" cy="18" r="10" />
+      <path d="M 24 20 Q 22 18 20 20" />
+      {/* 体 */}
+      <path d="M 20 28 Q 18 32 16 36" />
+      {/* 触角 */}
+      <line x1="16" y1="34" x2="14" y2="30" strokeWidth="1.5" />
+      <line x1="16" y1="34" x2="18" y2="30" strokeWidth="1.5" />
+    </svg>
+  )
+}
+
+export function HouseIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 屋根 */}
+      <path d="M 10 28 L 24 10 L 38 28" />
+      {/* 壁 */}
+      <rect x="10" y="28" width="28" height="16" />
+      {/* ドア */}
+      <rect x="20" y="28" width="8" height="16" />
+      {/* 窓 */}
+      <rect x="14" y="18" width="5" height="5" />
+      <rect x="29" y="18" width="5" height="5" />
+    </svg>
+  )
+}
+
+export function FlashlightIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* ボディ */}
+      <rect x="16" y="10" width="8" height="16" rx="2" />
+      {/* ボタン */}
+      <circle cx="20" cy="12" r="1.5" fill={color} />
+      {/* ライト */}
+      <circle cx="20" cy="30" r="6" fill="none" />
+      <path d="M 16 36 L 24 36" strokeWidth="1.5" />
+    </svg>
+  )
+}
+
+export function SideSpaceIcon({ size = 48, color = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* 左の車線 */}
+      <line x1="8" y1="12" x2="8" y2="36" strokeWidth="2" strokeDasharray="4,4" />
+      {/* 自転車 */}
+      <circle cx="18" cy="20" r="2" />
+      <line x1="18" y1="24" x2="18" y2="32" />
+      {/* 車 */}
+      <path d="M 30 14 L 40 14 L 40 28 L 30 28 Z" />
+      {/* 間隔矢印 */}
+      <path d="M 24 20 L 28 20" strokeWidth="2" />
+      <path d="M 24 18 L 24 22" strokeWidth="1.5" />
+      <path d="M 28 18 L 28 22" strokeWidth="1.5" />
+    </svg>
+  )
+}

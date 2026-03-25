@@ -1,14 +1,41 @@
 import { useState } from 'react'
 import { ruleItems, type RuleCategory, type AudienceType } from '../data/violations'
+import {
+  TrafficLightIcon,
+  SmartphoneIcon,
+  BeerIcon,
+  FlashlightIcon,
+  BicycleIcon,
+  CarIcon
+} from '../components/Icons'
 
 const categoryLabels: Record<RuleCategory, string> = {
-  signal:    '🚦 信号・一時停止',
-  smartphone:'📱 スマホ',
-  alcohol:   '🍺 飲酒',
-  road:      '🛣️ 道路通行',
-  equipment: '🔦 装備',
-  others:    '🚲 その他',
-  driver:    '🚗 ドライバー向け',
+  signal:    '信号・一時停止',
+  smartphone:'スマホ',
+  alcohol:   '飲酒',
+  road:      '道路通行',
+  equipment: '装備',
+  others:    'その他',
+  driver:    'ドライバー向け',
+}
+
+function getCategoryIcon(category: RuleCategory) {
+  switch (category) {
+    case 'signal':
+      return <TrafficLightIcon size={20} color="var(--pink-primary)" />
+    case 'smartphone':
+      return <SmartphoneIcon size={20} color="var(--pink-primary)" />
+    case 'alcohol':
+      return <BeerIcon size={20} color="var(--pink-primary)" />
+    case 'equipment':
+      return <FlashlightIcon size={20} color="var(--pink-primary)" />
+    case 'others':
+      return <BicycleIcon size={20} color="var(--pink-primary)" />
+    case 'driver':
+      return <CarIcon size={20} color="var(--pink-primary)" />
+    default:
+      return null
+  }
 }
 
 export default function Rules() {
@@ -91,12 +118,19 @@ export default function Rules() {
           if (!catItems.length) return null
           return (
             <div key={cat}>
-              <p
-                className="text-[11px] font-semibold uppercase tracking-widest mb-2 px-1"
-                style={{ color: 'var(--label-secondary)' }}
+              <div
+                className="flex items-center gap-2 mb-2 px-1"
               >
-                {categoryLabels[cat]}
-              </p>
+                <div className="text-sm flex-shrink-0">
+                  {getCategoryIcon(cat)}
+                </div>
+                <p
+                  className="text-[11px] font-semibold uppercase tracking-widest"
+                  style={{ color: 'var(--label-secondary)' }}
+                >
+                  {categoryLabels[cat]}
+                </p>
+              </div>
               <div
                 className="rounded-2xl overflow-hidden"
                 style={{ background: 'var(--bg-primary)' }}
@@ -113,7 +147,9 @@ export default function Rules() {
                       onClick={() => setExpanded(expandedId === rule.id ? null : rule.id)}
                       className="ios-press w-full flex items-center gap-3 px-4 py-4 text-left"
                     >
-                      <span className="text-2xl flex-shrink-0">{rule.emoji}</span>
+                      <div className="text-2xl flex-shrink-0">
+                        <CategoryRuleIconRenderer emoji={rule.emoji} />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span
@@ -189,4 +225,26 @@ export default function Rules() {
       </p>
     </div>
   )
+}
+
+/* ── ルール絵文字→アイコン変換 ── */
+function CategoryRuleIconRenderer({ emoji }: { emoji: string }) {
+  const color = 'var(--pink-primary)'
+
+  switch (emoji) {
+    case '🚦':
+      return <TrafficLightIcon size={28} color={color} />
+    case '📱':
+      return <SmartphoneIcon size={28} color={color} />
+    case '🍺':
+      return <BeerIcon size={28} color={color} />
+    case '🔦':
+      return <FlashlightIcon size={28} color={color} />
+    case '🚲':
+      return <BicycleIcon size={28} color={color} />
+    case '🚗':
+      return <CarIcon size={28} color={color} />
+    default:
+      return <span>{emoji}</span>
+  }
 }
