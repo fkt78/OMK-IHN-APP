@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import {
   CoinIcon,
   LightbulbIcon,
@@ -7,6 +8,9 @@ import {
   CarIcon,
   HouseIcon,
 } from '../components/Icons'
+
+const HEADER_GRADIENT =
+  'linear-gradient(160deg,#F9C8D5 0%,#F4A0B5 45%,#E8849A 100%)'
 
 const fineData = [
   {
@@ -64,23 +68,37 @@ function FineGroupIcon({ iconKey, size = 20 }: { iconKey: typeof fineData[0]['ic
 }
 
 export default function Fines() {
+  const navigate = useNavigate()
+
   return (
     <div className="min-h-screen pb-24" style={{ background: 'var(--bg-grouped)' }}>
       {/* ヘッダー */}
       <div
         className="px-4 pb-5"
         style={{
-          background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+          background: HEADER_GRADIENT,
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
-        <div className="flex items-center gap-2 mb-0.5">
-          <CoinIcon size={28} color="#fff" />
-          <h1 className="font-black text-[28px] text-white">反則金一覧</h1>
+        <div className="relative flex items-start gap-2">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="ios-press shrink-0 rounded-lg px-1 py-0.5 text-sm font-semibold text-white z-10"
+            style={{ marginTop: 2 }}
+          >
+            ‹ ホーム
+          </button>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <div className="flex items-center gap-2 mb-0.5">
+              <CoinIcon size={26} color="#fff" />
+              <h1 className="font-black text-[24px] leading-tight text-white">反則金一覧</h1>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,.85)', fontSize: 13 }}>
+              これが「青切符」の現実や
+            </p>
+          </div>
         </div>
-        <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
-          これが「青切符」の現実や
-        </p>
       </div>
 
       <div className="px-4 mt-4 max-w-md mx-auto">

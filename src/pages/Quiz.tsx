@@ -17,6 +17,9 @@ import {
 
 type Mode = 'select' | 'playing' | 'result'
 
+const PINK_HEADER_GRADIENT =
+  'linear-gradient(160deg,#F9C8D5 0%,#F4A0B5 45%,#E8849A 100%)'
+
 export default function Quiz() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -249,7 +252,7 @@ export default function Quiz() {
       <div
         className="px-4 pb-4"
         style={{
-          background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+          background: PINK_HEADER_GRADIENT,
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
@@ -447,7 +450,7 @@ function NavHeader({ title, onBack }: { title: string; onBack?: () => void }) {
     <div
       className="flex items-center px-4 py-3"
       style={{
-        background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+        background: PINK_HEADER_GRADIENT,
         paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
       }}
     >

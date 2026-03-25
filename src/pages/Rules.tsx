@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ruleItems, type RuleCategory, type AudienceType } from '../data/violations'
 import {
   TrafficLightIcon,
@@ -22,6 +23,9 @@ import {
   StarIcon,
   AlertIcon,
 } from '../components/Icons'
+
+const HEADER_GRADIENT =
+  'linear-gradient(160deg,#F9C8D5 0%,#F4A0B5 45%,#E8849A 100%)'
 
 const categoryLabels: Record<RuleCategory, string> = {
   signal:    '信号・一時停止',
@@ -56,6 +60,7 @@ function getCategoryIcon(category: RuleCategory) {
 }
 
 export default function Rules() {
+  const navigate = useNavigate()
   const [audience, setAudience]   = useState<AudienceType>('cyclist')
   const [expandedId, setExpanded] = useState<string | null>(null)
   const [showNewOnly, setNewOnly] = useState(false)
@@ -73,21 +78,33 @@ export default function Rules() {
       <div
         className="px-4 pb-4"
         style={{
-          background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+          background: HEADER_GRADIENT,
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
-        <div className="flex items-center gap-2 mb-0.5">
-          <BookOpenIcon size={28} color="#fff" />
-          <h1 className="font-black text-[28px] text-white">ルール一覧</h1>
+        <div className="relative flex items-start gap-2 mb-3">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="ios-press shrink-0 rounded-lg px-1 py-0.5 text-sm font-semibold text-white z-10"
+            style={{ marginTop: 2 }}
+          >
+            ‹ ホーム
+          </button>
+          <div className="min-w-0 flex-1 pt-0.5">
+            <div className="flex items-center gap-2 mb-0.5">
+              <BookOpenIcon size={26} color="#fff" />
+              <h1 className="font-black text-[24px] leading-tight text-white">ルール一覧</h1>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,.85)', fontSize: 13 }}>
+              知らんかったじゃ済まへんルール集
+            </p>
+          </div>
         </div>
-        <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 14 }}>
-          知らんかったじゃ済まへんルール集
-        </p>
 
         {/* セグメントコントロール */}
         <div
-          className="flex gap-1 mt-4 rounded-xl p-1"
+          className="flex gap-1 rounded-xl p-1"
           style={{ background: 'rgba(255,255,255,.2)' }}
         >
           {[

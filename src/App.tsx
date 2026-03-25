@@ -9,7 +9,10 @@ import Fines from './pages/Fines'
 export default function App() {
   return (
     <HashRouter>
-      <div className="max-w-md mx-auto min-h-screen relative bg-slate-50">
+      <div
+        className="max-w-md mx-auto min-h-screen relative"
+        style={{ background: 'var(--bg-grouped)' }}
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/quiz" element={<Quiz />} />

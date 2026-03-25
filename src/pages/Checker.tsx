@@ -31,6 +31,8 @@ import {
 } from '../components/Icons'
 
 const HOURLY_RATE_STORAGE_KEY = 'checker-hourly-rate'
+const PINK_HEADER_GRADIENT =
+  'linear-gradient(160deg,#F9C8D5 0%,#F4A0B5 45%,#E8849A 100%)'
 
 export default function Checker() {
   const [audience, setAudience] = useState<AudienceType>('cyclist')
@@ -73,7 +75,7 @@ export default function Checker() {
       <div
         className="px-4 pb-4"
         style={{
-          background: 'linear-gradient(160deg,#F9C8D5,#E8849A)',
+          background: PINK_HEADER_GRADIENT,
           paddingTop: 'max(56px, calc(env(safe-area-inset-top) + 12px))',
         }}
       >
